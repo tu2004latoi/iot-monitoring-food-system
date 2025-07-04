@@ -25,13 +25,17 @@ public class MqttSubscriber {
 
     private void startSubscriber() {
         try {
-            MqttClient client = new MqttClient(mqttProperties.getBroker(), mqttProperties.getClientId(), null);
+            String clientId = mqttProperties.getClientId() + "-" + java.util.UUID.randomUUID(); // clientId động
+            MqttClient client = new MqttClient(mqttProperties.getBroker(), clientId, null);
 
             MqttConnectOptions options = new MqttConnectOptions();
-            options.setUserName(mqttProperties.getUsername());
-            options.setPassword(mqttProperties.getPassword().toCharArray());
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
+
+            if (mqttProperties.getUsername() != null && !mqttProperties.getUsername().isEmpty()) {
+                options.setUserName(mqttProperties.getUsername());
+                options.setPassword(mqttProperties.getPassword().toCharArray());
+            }
 
             client.connect(options);
             client.subscribe(mqttProperties.getTopic(), (t, msg) -> {
@@ -61,6 +65,7 @@ public class MqttSubscriber {
             e.printStackTrace();
         }
     }
+
 
     public EnvRecord getLatestRecord() {
         return latestRecord;
