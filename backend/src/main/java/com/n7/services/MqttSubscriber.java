@@ -1,10 +1,10 @@
 package com.n7.services;
 
+import com.n7.configs.MqttProperties;
 import com.n7.controllers.WebSocketController;
 import com.n7.pojo.EnvRecord;
 import org.eclipse.paho.client.mqttv3.*;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,28 +12,29 @@ import java.time.LocalDateTime;
 @Service
 public class MqttSubscriber {
 
-    private final String broker = "tcp://192.168.1.17:1883";
-    private final String clientId = "SpringBootClient";
-    private final String topic = "esp32/sensor";
+    private final MqttProperties mqttProperties;
+    private final WebSocketController webSocketController;
 
     private EnvRecord latestRecord;
 
-    @Autowired
-    private WebSocketController webSocketController;
-
-    public MqttSubscriber() {
+    public MqttSubscriber(MqttProperties mqttProperties, WebSocketController webSocketController) {
+        this.mqttProperties = mqttProperties;
+        this.webSocketController = webSocketController;
         startSubscriber();
     }
 
     private void startSubscriber() {
         try {
-            MqttClient client = new MqttClient(broker, clientId, null);
+            MqttClient client = new MqttClient(mqttProperties.getBroker(), mqttProperties.getClientId(), null);
+
             MqttConnectOptions options = new MqttConnectOptions();
+            options.setUserName(mqttProperties.getUsername());
+            options.setPassword(mqttProperties.getPassword().toCharArray());
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
 
             client.connect(options);
-            client.subscribe(topic, (t, msg) -> {
+            client.subscribe(mqttProperties.getTopic(), (t, msg) -> {
                 String payload = new String(msg.getPayload());
                 System.out.println("Received: " + payload);
 
@@ -48,12 +49,13 @@ public class MqttSubscriber {
 
                 this.latestRecord = record;
 
-                // Gửi dữ liệu tới client real-time qua WebSocket
+                // Gửi dữ liệu real-time qua WebSocket
                 webSocketController.sendDataToClients(record);
 
+                System.out.println("Data sent to WebSocket: " + record);
             });
 
-            System.out.println("Connected and subscribed to topic: " + topic);
+            System.out.println("Connected and subscribed to topic: " + mqttProperties.getTopic());
 
         } catch (MqttException e) {
             e.printStackTrace();

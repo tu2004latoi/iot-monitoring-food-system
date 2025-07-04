@@ -27,7 +27,12 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers(
+                                "/ws/**",            // WebSocket SockJS endpoint
+                                "/sockjs-node/**",   // SockJS node fallback
+                                "/info",             // SockJS info handshake
+                                "/**"                // Cho phép tất cả tạm thời để debug
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -36,12 +41,13 @@ public class SecurityConfig {
     }
 
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Gốc hợp lệ (frontend)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // Các phương thức HTTP
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Các header được phép
+        configuration.setAllowedOriginPatterns(List.of("*")); // Cho phép tất cả origin
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
 
@@ -49,6 +55,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
