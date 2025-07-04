@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { CameraView, Camera, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 
-const ScanScreen = () => {
+export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
 
-  // Kiểm tra quyền camera
+  // Chưa lấy được trạng thái quyền
   if (!permission) {
     return (
       <View style={styles.container}>
@@ -15,6 +15,7 @@ const ScanScreen = () => {
     );
   }
 
+  // Chưa cấp quyền camera
   if (!permission.granted) {
     return (
       <View style={styles.container}>
@@ -28,17 +29,17 @@ const ScanScreen = () => {
     );
   }
 
-  // Xử lý khi quét được mã
-  const handleBarcodeScanned = ({ type, data }: { type: string; data: string }) => {
+  // Khi quét được mã
+  const handleBarcodeScanned = ({ type, data }) => {
     setScanned(true);
     Alert.alert(
-      'Đã quét được mã!', 
-      `Loại: ${type}\nDữ liệu: ${data}`, 
+      'Đã quét được mã!',
+      `Loại: ${type}\nDữ liệu: ${data}`,
       [
-        { 
-          text: 'OK', 
-          onPress: () => setScanned(false) // Reset để có thể quét tiếp
-        }
+        {
+          text: 'OK',
+          onPress: () => setScanned(false), // cho phép quét tiếp
+        },
       ]
     );
   };
@@ -51,31 +52,29 @@ const ScanScreen = () => {
         onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
         barcodeScannerSettings={{
           barcodeTypes: [
-            "qr",        // Mã QR
-            "pdf417",    // PDF417
-            "aztec",     // Aztec
-            "ean13",     // EAN-13
-            "ean8",      // EAN-8
-            "upc_e",     // UPC-E
-            "code128",   // Code 128
-            "code39",    // Code 39
-            "code93",    // Code 93
-            "codabar",   // Codabar
-            "itf14",     // ITF-14
-            "datamatrix" // Data Matrix
+            'qr',
+            'pdf417',
+            'aztec',
+            'ean13',
+            'ean8',
+            'upc_e',
+            'code128',
+            'code39',
+            'code93',
+            'codabar',
+            'itf14',
+            'datamatrix',
           ],
         }}
       >
-        {/* Overlay để hiển thị khung quét */}
+        {/* Khung quét + overlay */}
         <View style={styles.overlay}>
           <View style={styles.scanArea}>
-            <Text style={styles.instruction}>
-              Đưa mã vào khung để quét
-            </Text>
+            <Text style={styles.instruction}>Đưa mã vào khung để quét</Text>
           </View>
-          
+
           {scanned && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.scanAgainButton}
               onPress={() => setScanned(false)}
             >
@@ -86,7 +85,7 @@ const ScanScreen = () => {
       </CameraView>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -152,4 +151,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScanScreen;
