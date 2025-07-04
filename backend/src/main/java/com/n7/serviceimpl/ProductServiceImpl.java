@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    private ProductRepository productSer;
+    private ProductRepository productRepo;
 
     @Autowired
     private Cloudinary cloudinary;
@@ -32,11 +32,11 @@ public class ProductServiceImpl implements ProductService {
                 Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return this.productSer.save(p);
+        return this.productRepo.save(p);
     }
 
     @Override
     public List<Product> getAllProducts() {
-        return this.productSer.findAll();
+        return this.productRepo.findAll();
     }
 }
