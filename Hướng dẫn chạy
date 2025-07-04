@@ -1,0 +1,11 @@
+# chạy webapp
+# B1 cài các thư viện
+npm install 
+# B2 chạy web
+npm run dev
+
+# chạy moblieapp
+# B1 cài các thư viện
+npm install 
+# B2 chạy web
+npm start
