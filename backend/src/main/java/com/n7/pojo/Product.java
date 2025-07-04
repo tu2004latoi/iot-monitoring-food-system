@@ -1,17 +1,16 @@
 package com.n7.pojo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Data
 @Table(name = "products")
-@NamedQueries({
-        @NamedQuery(name = "Product.findByUserId", query = "SELECT p FROM Product p WHERE p.user.userId = :userId"),
-        @NamedQuery(name = "Product.findByStatus", query = "SELECT p FROM Product p WHERE p.status = :status"),
-        @NamedQuery(name = "Product.findNearExpiry", query = "SELECT p FROM Product p WHERE p.expiryDate BETWEEN :fromDate AND :toDate")
-})
 public class Product {
 
     @Id
@@ -26,19 +25,22 @@ public class Product {
     @Column(name = "product_name", nullable = false, length = 100)
     private String productName;
 
-    @Column(name = "category", length = 50)
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "expiry_date", nullable = false)
-    private Date expiryDate;
+    private LocalDate expiryDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // Ngày phát hiện
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "detected_at", nullable = false)
-    private Date detectedAt;
+    private LocalDateTime detectedAt;
 
-    @Column(name = "unit", length = 20)
-    private String unit;
+    @ManyToOne
+    @JoinColumn(name="unit_id")
+    private Unit unit;
 
     @Column(name = "quantity")
     private Float quantity;
@@ -47,15 +49,36 @@ public class Product {
     @Column(name = "notes")
     private String notes;
 
-    @Column(name = "is_motified")
-    private Boolean isMotified = false;
-
-    @Column(name = "status", length = 45)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     @Lob
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "image")
+    private String image;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @Transient
+    @JoinColumn
+    private MultipartFile file;
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 
     public Integer getProductId() {
         return productId;
@@ -81,35 +104,35 @@ public class Product {
         this.productName = productName;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
-    public Date getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
 
-    public Date getDetectedAt() {
+    public LocalDateTime getDetectedAt() {
         return detectedAt;
     }
 
-    public void setDetectedAt(Date detectedAt) {
+    public void setDetectedAt(LocalDateTime detectedAt) {
         this.detectedAt = detectedAt;
     }
 
-    public String getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
-    public void setUnit(String unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
     }
 
@@ -129,28 +152,24 @@ public class Product {
         this.notes = notes;
     }
 
-    public Boolean getMotified() {
-        return isMotified;
-    }
-
-    public void setMotified(Boolean motified) {
-        isMotified = motified;
-    }
-
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImage() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public enum Status {
+        notExpired, expired;
     }
 }
 

@@ -16,21 +16,35 @@ CREATE TABLE users (
     created_at DATETIME
 );
 
+CREATE TABLE categories (
+	category_id int auto_increment primary key,
+    category_name varchar(50) not null unique,
+    description text
+);
+
+CREATE TABLE units (
+	unit_id int auto_increment primary key,
+    unit_name varchar(50),
+    description text
+);
+
 -- 3. Tạo bảng products
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     product_name VARCHAR(100) NOT NULL,
-    category VARCHAR(50),
+    category_id int,
     expiry_date DATE NOT NULL,
     detected_at DATETIME NOT NULL,
-    unit VARCHAR(20),
+    unit_id int,
     quantity FLOAT,
     notes TEXT,
-    is_motified TINYINT DEFAULT 0,
-    status VARCHAR(45),
-    image_url TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL
+    status enum ('notExpired', 'Expired'),
+    image TEXT,
+    is_active boolean,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    FOREIGN KEY (category_id) references categories(category_id) on delete set null,
+    foreign key (unit_id) references units(unit_id) on delete set null
 );
 
 -- 4. Tạo bảng env_records (ghi nhận nhiệt độ, độ ẩm)
