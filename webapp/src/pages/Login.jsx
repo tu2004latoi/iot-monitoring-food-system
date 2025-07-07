@@ -1,39 +1,60 @@
-import { useState } from 'react';
-import './Login.css'; // Import CSS riêng
+import {useState} from 'react';
+import {useAuth} from '../context/AuthContext';
+import {TextField, Button, Container, Typography, Box} from '@mui/material';
+import {toast} from 'react-toastify';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+    const {login} = useAuth();
+    const [credentials, setCredentials] = useState({
+        username: '',
+        password: '',
+    });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({ email, password });
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await login(credentials);
+            console.log("dang nhap thanh cong")
+            toast.success('Đăng nhập thành công!');
+        } catch (error) {
+            toast.error('Sai tên đăng nhập hoặc mật khẩu!');
+            console.log("dang nhap that bai")
+        }
+    };
 
-  return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2 className="login-title">Đăng nhập</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="login-input"
-        />
-        <input
-          type="password"
-          placeholder="Mật khẩu"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="login-input"
-        />
-        <button type="submit" className="login-button">Đăng nhập</button>
-      </form>
-    </div>
-  );
+    return (
+        <Container maxWidth="xs">
+            <Box sx={{mt: 8, textAlign: 'center'}}>
+                <Typography variant="h4">Đăng nhập</Typography>
+                <form onSubmit={handleSubmit}>
+                    <TextField
+                        label="Tên đăng nhập"
+                        fullWidth
+                        margin="normal"
+                        value={credentials.username}
+                        inputProps={{
+                            autoComplete: "username", // Thêm dòng này
+                        }}
+                        onChange={(e) => setCredentials({...credentials, username: e.target.value})}
+                    />
+                    <TextField
+                        label="Mật khẩu"
+                        type="password"
+                        fullWidth
+                        margin="normal"
+                        value={credentials.password}
+                        inputProps={{
+                            autoComplete: "current-password", // Thêm dòng này
+                        }}
+                        onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                    />
+                    <Button type="submit" variant="contained" fullWidth sx={{mt: 3}}>
+                        Đăng nhập
+                    </Button>
+                </form>
+            </Box>
+        </Container>
+    );
 };
 
 export default Login;
