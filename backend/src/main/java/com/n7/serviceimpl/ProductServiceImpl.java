@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.n7.pojo.Product;
 import com.n7.repositories.ProductRepository;
 import com.n7.services.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     private Cloudinary cloudinary;
 
     @Override
+    @Transactional
     public Product addOrUpdateProduct(Product p) {
         if (p.getFile() != null && !p.getFile().isEmpty()) {
             try {

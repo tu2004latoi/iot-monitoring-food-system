@@ -6,6 +6,7 @@ import com.n7.pojo.User;
 import com.n7.repositories.UserRepository;
 import com.n7.security.CustomUserDetails;
 import com.n7.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User addOrUpdateUser(User u) {
         if (u.getFile() != null && !u.getFile().isEmpty()) {
             try {
