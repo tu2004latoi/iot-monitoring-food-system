@@ -10,7 +10,7 @@ INSERT INTO categories (category_name, description) VALUES
 
 -- Thêm dữ liệu cho bảng units
 INSERT INTO units (unit_name, description)
-VALUES 
+VALUES
 ('Kg', 'Kilogram - đơn vị đo khối lượng'),
 ('L', 'Lít - đơn vị đo thể tích'),
 ('Cái', 'Đơn vị đếm');
@@ -19,3 +19,4 @@ VALUES
 INSERT INTO products (user_id, product_name, category_id, expiry_date, detected_at, unit_id, quantity, notes, status, image, is_active) VALUES
 (2, 'Sữa tươi Vinamilk', 2, '2025-12-31', NOW(), 2, 5, 'Bảo quản lạnh', 'notExpired', 'https://res.cloudinary.com/druxxfmia/image/upload/v1751448454/f9l6og6hmofqfcqllvoj.png', true),
 (2, 'Bánh Oreo', 1, '2025-10-01', NOW(), 3, 10, 'Để nơi khô ráo', 'notExpired', 'https://res.cloudinary.com/druxxfmia/image/upload/v1751448454/f9l6og6hmofqfcqllvoj.png', true);
+

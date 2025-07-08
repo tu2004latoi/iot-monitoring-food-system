@@ -1,26 +1,34 @@
-.app.light .product-table th {
+/* === Light Theme Variables === */
+.app.light {
   --bg-color: #ffffff;
-  --text-color: #000000;
-  --sidebar-color: #f1f1f1;
+  --text-color: #222222;
+  --sidebar-color: #f5f5f5;
+  --table-header-bg: #f9f9f9;
+  --table-border: #e0e0e0;
   --button-bg: #1579dc;
-  --button-text: white;
+  --button-text: #ffffff;
 }
 
-.app.dark .product-table th {
-  --navbar-bg: #065fdd; 
+/* === Dark Theme Variables === */
+.app.dark {
   --bg-color: #1e1e2f;
-  --text-color: #000000;
+  --text-color: #f5f5f5;
   --sidebar-color: #2b2b3c;
+  --table-header-bg: #2f2f48;
+  --table-border: #444;
   --button-bg: #4a90e2;
-  --button-text: rgb(0, 0, 0);
+  --button-text: #000000;
 }
 
+/* === Main Layout === */
 .products-page {
   padding: 24px;
   font-family: "Segoe UI", sans-serif;
   color: var(--text-color);
+  background-color: var(--bg-color);
 }
 
+/* === Header with Add Button === */
 .products-header {
   display: flex;
   justify-content: space-between;
@@ -29,20 +37,23 @@
 }
 
 .add-button {
-  padding: 8px 16px;
+  padding: 10px 20px;
+  font-size: 14px;
   background-color: var(--button-bg);
   color: var(--button-text);
   border: none;
   border-radius: 8px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .add-button:hover {
   background-color: #0056b3;
+  transform: scale(1.03);
 }
 
+/* === Filters === */
 .filters {
   margin: 16px 0;
   display: flex;
@@ -68,30 +79,34 @@
   border-color: #4a90e2;
 }
 
+/* === Product Table === */
 .product-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--bg-color);
-  border-radius: 10px;
-  color: var(--text-color);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background-color: var(--bg-color);
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
 }
 
 .product-table th,
 .product-table td {
   padding: 14px 16px;
   text-align: left;
-  border-bottom: 1px solid #eee;
   font-size: 14px;
+  border-bottom: 1px solid var(--table-border);
+  transition: background-color 0.2s ease;
 }
 
 .product-table th {
-  background-color: #f9f9f9;
-  color: #444;
+  background-color: var(--table-header-bg);
+  color: var(--text-color);
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* === Table Status === */
 .status-active {
   color: #2ecc71;
   font-weight: bold;
@@ -102,24 +117,66 @@
   font-weight: bold;
 }
 
+/* === Edit & Delete Buttons === */
+.edit-btn,
 .delete-btn {
-  background-color: #e74c3c;
-  color: white;
   padding: 6px 12px;
+  font-size: 13px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 13px;
-  transition: background-color 0.2s;
+  margin-right: 6px;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #f1c40f;
+  color: #000000;
+}
+
+.edit-btn:hover {
+  background-color: #d4ac0d;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: #ffffff;
 }
 
 .delete-btn:hover {
   background-color: #c0392b;
 }
 
+/* === No Results Message === */
 .no-results {
   text-align: center;
   color: gray;
-  padding: 20px;
+  padding: 24px;
   font-style: italic;
+  background-color: var(--bg-color);
 }
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .products-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .add-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .product-table th,
+  .product-table td {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+}
+

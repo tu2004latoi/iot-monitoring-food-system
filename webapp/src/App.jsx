@@ -11,8 +11,6 @@ import {FaBars} from "react-icons/fa";
 import "./App.css";
 import Testapp from "./Testapp";
 import {useAuth} from "./context/AuthContext"; // Thêm import
-import {useFetch} from "./hooks/useFetch";
-import {endpoints} from "./api/Apis";
 
 // Tạo PrivateRoute component
 const PrivateRoute = ({children}) => {
@@ -32,17 +30,8 @@ function App() {
     const toggleTheme = () =>
         setTheme((prev) => (prev === "light" ? "dark" : "light"));
 
-    const { addProduct, updateProduct, deleteProduct} = useProducts();
-    const {
-        data: products,
-        isLoading,
-        error,
-    } = useFetch(endpoints.products);
-
-    if (error) {
-        return 'Something wrong!!!';
-    }
-    return (
+    const {products, addProduct, updateProduct, deleteProduct} = useProducts();
+       return (
         <div className={`app ${theme}`}>
             <Header toggleTheme={toggleTheme} currentTheme={theme} />
             {token && (
