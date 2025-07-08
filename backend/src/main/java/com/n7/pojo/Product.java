@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Data
 @Table(name = "products")
@@ -62,6 +62,7 @@ public class Product {
 
     @Transient
     @JoinColumn
+	 @JsonIgnore
     private MultipartFile file;
 
     public MultipartFile getFile() {
