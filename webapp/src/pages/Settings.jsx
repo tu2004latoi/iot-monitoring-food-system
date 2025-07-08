@@ -3,9 +3,8 @@ import "./Settings.css";
 
 const Settings = () => {
   const [form, setForm] = useState({
-    username: "admin",
-    email: "admin@example.com",
-    theme: "light",
+    username: "",
+    email: "",
     password: "",
     confirmPassword: "",
   });
@@ -22,7 +21,7 @@ const Settings = () => {
       return;
     }
     alert("Cài đặt đã được lưu!");
-    // Có thể gửi form lên server ở đây
+    // Thêm logic gửi dữ liệu lên server ở đây
   };
 
   return (
@@ -36,6 +35,7 @@ const Settings = () => {
             name="username"
             value={form.username}
             onChange={handleChange}
+            autoComplete="username"  // Thêm autocomplete
           />
         </label>
 
@@ -46,15 +46,8 @@ const Settings = () => {
             name="email"
             value={form.email}
             onChange={handleChange}
+            autoComplete="email"  // Thêm autocomplete
           />
-        </label>
-
-        <label>
-          Giao diện:
-          <select name="theme" value={form.theme} onChange={handleChange}>
-            <option value="light">🌞 Sáng</option>
-            <option value="dark">🌙 Tối</option>
-          </select>
         </label>
 
         <label>
@@ -65,7 +58,10 @@ const Settings = () => {
             value={form.password}
             onChange={handleChange}
             placeholder="Để trống nếu không thay đổi"
+            autoComplete="new-password"  // Thêm autocomplete
+            aria-describedby="password-help"  // Thêm ARIA
           />
+          <small id="password-help">Để trống nếu không muốn thay đổi</small>
         </label>
 
         <label>
@@ -75,10 +71,14 @@ const Settings = () => {
             name="confirmPassword"
             value={form.confirmPassword}
             onChange={handleChange}
+            autoComplete="new-password"  // Thêm autocomplete
+            aria-label="Xác nhận mật khẩu mới"  // Thêm ARIA
           />
         </label>
 
-        <button type="submit" className="save-btn">💾 Lưu thay đổi</button>
+        <button type="submit" className="save-btn">
+          💾 Lưu thay đổi
+        </button>
       </form>
     </div>
   );
