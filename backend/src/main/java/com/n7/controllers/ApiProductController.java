@@ -73,4 +73,55 @@ public class ApiProductController {
         return ResponseEntity.ok(this.productSer.addOrUpdateProduct(p));
     }
 
+    @PutMapping("/products/{id}/update")
+    public ResponseEntity<Product> updateProduct(@PathVariable int id,
+             @RequestParam("productName") String productName,
+             @RequestParam("userId") Integer userId,
+             @RequestParam("categoryId") Integer categoryId,
+             @RequestParam("expiryDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expiryDate,
+             @RequestParam("detectedAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime detectedAt,
+             @RequestParam("unitId") Integer unitId,
+             @RequestParam("quantity") Float quantity,
+             @RequestParam("notes") String notes,
+             @RequestParam("status") Product.Status status,
+             @RequestParam("file") MultipartFile file){
+
+        Product existingProduct = productSer.getProductById(id); // bạn cần có hàm này trong ProductService
+        if (existingProduct == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Gán thông tin mới
+        User u = userSer.getUserByUserId(userId);
+        Category cate = categorySer.getCategoryById(categoryId);
+        Unit unit = unitSer.getUnitById(unitId);
+
+        existingProduct.setUser(u);
+        existingProduct.setCategory(cate);
+        existingProduct.setUnit(unit);
+        existingProduct.setProductName(productName);
+        existingProduct.setExpiryDate(expiryDate);
+        existingProduct.setDetectedAt(detectedAt);
+        existingProduct.setQuantity(quantity);
+        existingProduct.setNotes(notes);
+        existingProduct.setStatus(status);
+        existingProduct.setActive(true);
+
+        Product updated = productSer.addOrUpdateProduct(existingProduct);
+        return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductDetails(@PathVariable int id){
+        Product p = this.productSer.getProductById(id);
+        return ResponseEntity.ok(p);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int id){
+        Product p = this.productSer.getProductById(id);
+        this.productSer.deleteProduct(p);
+        return ResponseEntity.ok("ok");
+    }
+
 }

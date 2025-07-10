@@ -27,6 +27,12 @@ public class ApiUserController {
         return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
     }
 
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @ModelAttribute User u){
+        u.setUserId(id);
+        return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
+    }
+
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody User u) {
         if (u.getUsername() == null || u.getPassword() == null) {

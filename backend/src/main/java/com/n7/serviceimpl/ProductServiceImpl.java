@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,4 +42,17 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAllProducts() {
         return this.productRepo.findAll();
     }
+
+    @Override
+    public Product getProductById(int id) {
+        Optional<Product> p = this.productRepo.findById(id);
+        return p.orElse(null);
+    }
+
+    @Override
+    public void deleteProduct(Product p) {
+        this.productRepo.delete(p);
+    }
+
+
 }
