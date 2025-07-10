@@ -35,7 +35,6 @@ export const useFetch = (url) => {
             try {
                 const API = await authApis();
                 const res = await API.get(url);
-                console.log(res)
                 const json = res.data;
 
                 dispatch({
