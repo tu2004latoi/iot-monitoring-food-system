@@ -26,9 +26,9 @@ function App() {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
-
     const toggleTheme = () =>
         setTheme((prev) => (prev === "light" ? "dark" : "light"));
+
 
     const {products, addProduct, updateProduct, deleteProduct} = useProducts();
        return (
