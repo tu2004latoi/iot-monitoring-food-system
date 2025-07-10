@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import AddEditProductModal from "../components/AddEditProductModal";
 import "./Products.css";
-
+import { useProducts } from "../hooks/useProducts"
 const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 	const [search, setSearch] = useState("");
 	const [category, setCategory] = useState("all");
 	const [showModal, setShowModal] = useState(false);
 	const [editProduct, setEditProduct] = useState(null);
-
+	const { categories = [] } = useProducts();
 	const filtered = products.filter((p) => {
 		const matchCat = category === "all" || p.category?.categoryName === category;
 		const matchSearch = p.productName?.toLowerCase().includes(search.toLowerCase());
@@ -25,8 +25,9 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 	};
 
 	const handleSave = (productData) => {
-		if (editProduct) {
+		if (editProduct.productId) {
 			updateProduct(productData);
+
 		} else {
 			addProduct(productData);
 		}
@@ -50,15 +51,9 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 				/>
 				<select value={category} onChange={(e) => setCategory(e.target.value)}>
 					<option value="all">Tất cả</option>
-					{[
-						...new Set(
-							products
-								.map((p) => p.category?.categoryName)
-								.filter((c) => typeof c === "string")
-						),
-					].map((c) => (
-						<option key={c} value={c}>
-							{c}
+					{categories.map((c) => (
+						<option key={c.categoryId} value={c.categoryId} >
+							{c.categoryName}
 						</option>
 					))}
 				</select>
