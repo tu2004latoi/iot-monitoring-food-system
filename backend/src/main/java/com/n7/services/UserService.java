@@ -13,4 +13,5 @@ public interface UserService extends UserDetailsService {
     User getUserByUserId(int id);
     List<User> getAllUsers();
     boolean authenticate(String username, String password);
+    void deleteUser(User u);
 }

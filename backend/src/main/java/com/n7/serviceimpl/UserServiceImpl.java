@@ -94,4 +94,9 @@ public class UserServiceImpl implements UserService {
 
         return false;
     }
+
+    @Override
+    public void deleteUser(User u) {
+        this.userRepo.delete(u);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ApiUserController {
         return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/users/{id}/update")
     public ResponseEntity<User> updateUser(@PathVariable Integer id, @ModelAttribute User u){
         u.setUserId(id);
         return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
@@ -54,6 +55,20 @@ public class ApiUserController {
             }
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai thông tin đăng nhập");
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable int id){
+        User u = this.userSer.getUserByUserId(id);
+        this.userSer.deleteUser(u);
+        return ResponseEntity.ok("ok");
+    }
+
+    @RequestMapping("/secure/profile")
+    @ResponseBody
+    @CrossOrigin
+    public ResponseEntity<User> getProfile(Principal principal) {
+        return new ResponseEntity<>(this.userSer.getUserByUsername(principal.getName()), HttpStatus.OK);
     }
 
 }
