@@ -22,8 +22,20 @@ public class ApiUserController {
         return ResponseEntity.ok(userSer.getAllUsers());
     }
 
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable int id){
+        User u = this.userSer.getUserByUserId(id);
+        return ResponseEntity.ok(u);
+    }
+
     @PostMapping("/users/add")
     public ResponseEntity<User> addUser(@ModelAttribute User u){
+        return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
+    }
+
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @ModelAttribute User u){
+        u.setUserId(id);
         return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
     }
 

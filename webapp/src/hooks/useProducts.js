@@ -48,12 +48,12 @@ export const useProducts = () => {
 
 	const updateProduct = (productData) => {
 		setProducts(prev =>
-			prev.map(p => p.productId === productData.productId ? productData : p)
+			prev.map(p => p.id === productData.id ? productData : p)
 		);
 	};
 
 	const deleteProduct = (productId) => {
-		setProducts(prev => prev.filter(p => p.productId !== productId));
+		setProducts(prev => prev.filter(p => p.id !== productId));
 	};
 
 	const categories = products
