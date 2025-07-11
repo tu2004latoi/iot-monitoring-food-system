@@ -18,7 +18,7 @@ const Login = () => {
             toast.success('Đăng nhập thành công!');
         } catch (error) {
             toast.error('Sai tên đăng nhập hoặc mật khẩu!');
-            console.log("dang nhap that bai")
+            console.log("dang nhap that bai", error)
         }
     };
 

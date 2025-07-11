@@ -4,7 +4,7 @@ export const BASE_URL = 'http://localhost:8080/api/';
 
 export const endpoints = {
 	login: '/auth/login',
-	profile: '"/secure/profile',
+	profile: '/secure/profile',
 	users: '/users',
 	usersDetail: (id) => `/users/${id}`,
 	userAdd: '/users/add',
