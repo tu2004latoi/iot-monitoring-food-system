@@ -6,6 +6,7 @@ import com.n7.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -18,6 +19,9 @@ import java.util.Optional;
 public class ApiUserController {
     @Autowired
     private UserService userSer;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers(){
@@ -53,6 +57,11 @@ public class ApiUserController {
         if (u.getFile() != null && !u.getFile().isEmpty()) {
             user.setFile(u.getFile());
         }
+
+        if (u.getPassword() != null && !u.getPassword().isBlank()) {
+            user.setPassword(u.getPassword());
+        }
+
         return ResponseEntity.ok(this.userSer.addOrUpdateUser(user));
     }
 

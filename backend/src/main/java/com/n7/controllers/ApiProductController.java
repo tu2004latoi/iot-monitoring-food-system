@@ -16,8 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -36,8 +36,30 @@ public class ApiProductController {
     private UnitService unitSer;
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts(){
-        return ResponseEntity.ok(this.productSer.getAllProducts());
+    public ResponseEntity<?> getAllProducts(){
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        List<Product> products = this.productSer.getAllProducts();
+        List<Map<String, Object>> listData = new ArrayList<>();
+        for (Product p:products){
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("productId", p.getProductId());
+            data.put("userId", p.getUser().getUserId());
+            data.put("productName", p.getProductName());
+            data.put("categoryId", p.getCategory().getCategoryId());
+            data.put("expiryDate", dateFormatter.format(p.getExpiryDate()));
+            data.put("detectedAt", dateTimeFormatter.format(p.getDetectedAt()));
+            data.put("unitId", p.getUnit().getUnitId());
+            data.put("quantity", p.getQuantity());
+            data.put("notes", p.getNotes());
+            data.put("status", p.getStatus());
+            data.put("image", p.getImage());
+            data.put("isActive", p.getActive());
+
+            listData.add(data);
+        }
+
+        return ResponseEntity.ok(listData);
     }
 
     @PostMapping("/products/add")
@@ -73,43 +95,76 @@ public class ApiProductController {
         return ResponseEntity.ok(this.productSer.addOrUpdateProduct(p));
     }
 
-    @PutMapping("/products/{id}/update")
-    public ResponseEntity<Product> updateProduct(@PathVariable int id,
-             @RequestParam("productName") String productName,
-             @RequestParam("userId") Integer userId,
-             @RequestParam("categoryId") Integer categoryId,
-             @RequestParam("expiryDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expiryDate,
-             @RequestParam("detectedAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime detectedAt,
-             @RequestParam("unitId") Integer unitId,
-             @RequestParam("quantity") Float quantity,
-             @RequestParam("notes") String notes,
-             @RequestParam("status") Product.Status status,
-             @RequestParam("file") MultipartFile file){
+    @PatchMapping("/products/{id}/update")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable int id,
+            @RequestParam(value = "productName", required = false) String productName,
+            @RequestParam(value = "userId", required = false) Integer userId,
+            @RequestParam(value = "categoryId", required = false) Integer categoryId,
+            @RequestParam(value = "expiryDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expiryDate,
+            @RequestParam(value = "detectedAt", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime detectedAt,
+            @RequestParam(value = "unitId", required = false) Integer unitId,
+            @RequestParam(value = "quantity", required = false) Float quantity,
+            @RequestParam(value = "notes", required = false) String notes,
+            @RequestParam(value = "status", required = false) Product.Status status,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
 
-        Product existingProduct = productSer.getProductById(id); // bạn cần có hàm này trong ProductService
+        Product existingProduct = productSer.getProductById(id);
         if (existingProduct == null) {
             return ResponseEntity.notFound().build();
         }
 
-        // Gán thông tin mới
-        User u = userSer.getUserByUserId(userId);
-        Category cate = categorySer.getCategoryById(categoryId);
-        Unit unit = unitSer.getUnitById(unitId);
+        if (productName != null && !productName.equals(existingProduct.getProductName())) {
+            existingProduct.setProductName(productName);
+        }
 
-        existingProduct.setUser(u);
-        existingProduct.setCategory(cate);
-        existingProduct.setUnit(unit);
-        existingProduct.setProductName(productName);
-        existingProduct.setExpiryDate(expiryDate);
-        existingProduct.setDetectedAt(detectedAt);
-        existingProduct.setQuantity(quantity);
-        existingProduct.setNotes(notes);
-        existingProduct.setStatus(status);
-        existingProduct.setActive(true);
+        if (expiryDate != null && !expiryDate.equals(existingProduct.getExpiryDate())) {
+            existingProduct.setExpiryDate(expiryDate);
+        }
+
+        if (detectedAt != null && !detectedAt.equals(existingProduct.getDetectedAt())) {
+            existingProduct.setDetectedAt(detectedAt);
+        }
+
+        if (quantity != null && !quantity.equals(existingProduct.getQuantity())) {
+            existingProduct.setQuantity(quantity);
+        }
+
+        if (notes != null && !notes.equals(existingProduct.getNotes())) {
+            existingProduct.setNotes(notes);
+        }
+
+        if (status != null && !status.equals(existingProduct.getStatus())) {
+            existingProduct.setStatus(status);
+        }
+
+        if (userId != null && !userId.equals(existingProduct.getUser().getUserId())) {
+            User u = userSer.getUserByUserId(userId);
+            existingProduct.setUser(u);
+        }
+
+        if (categoryId != null && !categoryId.equals(existingProduct.getCategory().getCategoryId())) {
+            Category cate = categorySer.getCategoryById(categoryId);
+            existingProduct.setCategory(cate);
+        }
+
+        if (unitId != null && !unitId.equals(existingProduct.getUnit().getUnitId())) {
+            Unit unit = unitSer.getUnitById(unitId);
+            existingProduct.setUnit(unit);
+        }
+
+        if (file != null && !file.isEmpty()) {
+            existingProduct.setFile(file); // xử lý upload trong service
+        }
+
+        if (!Boolean.TRUE.equals(existingProduct.getIsActive())) {
+            existingProduct.setActive(true);
+        }
 
         Product updated = productSer.addOrUpdateProduct(existingProduct);
         return ResponseEntity.ok(updated);
     }
+
 
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductDetails(@PathVariable int id){
