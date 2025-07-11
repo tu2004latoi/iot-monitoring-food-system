@@ -10,21 +10,23 @@ export const AuthProvider = ({ children }) => {
 
 	// Kiểm tra token khi load app
 	useEffect(() => {
-	const fetchProfile = async () => {
-		try {
-			const api = await authApis();
-			const res = await api.get(endpoints.profile);
-			console.log("STATUS:", res.status);
-			console.log("DATA:", res.data);
-		} catch (err) {
-			console.error("ERR", err.response?.data || err.message);
-		}
-	};
+		const fetchProfile = async () => {
+			try {
+				const api = await authApis();
+				const res = await api.get(endpoints.profile);
+				console.log("STATUS:", res.status);
+				console.log("DATA:", res.data);
+				setUser(res.data); // ✅ Đặt user ở đây
+			} catch (err) {
+				console.error("ERR", err.response?.data || err.message);
+				logout(); // Đăng xuất nếu token sai hoặc hết hạn
+			}
+		};
 
-	if (token) {
-		fetchProfile();
-	}
-}, [token]);
+		if (token || !user) {
+			fetchProfile();
+		}
+	}, [token]);
 
 	const login = async (credentials) => {
 
@@ -38,6 +40,9 @@ export const AuthProvider = ({ children }) => {
 		);
 		setToken(response.data.token);
 		localStorage.setItem('token', response.data.token);
+		const api = await authApis(); // gắn token
+		const profileRes = await api.get(endpoints.profile);
+		setUser(profileRes.data); // cập nhật user
 		navigate('/');
 	}
 

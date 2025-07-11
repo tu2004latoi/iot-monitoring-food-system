@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + u.getRole().name()));
 
-        return new CustomUserDetails(u.getUserId(), u.getEmail(), u.getPassword(), authorities);
+        return new CustomUserDetails(u.getUserId(), u.getUsername(), u.getPassword(), authorities);
     }
 
     @Override

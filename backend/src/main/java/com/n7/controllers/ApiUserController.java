@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -34,10 +35,25 @@ public class ApiUserController {
         return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
     }
 
-    @PutMapping("/users/{id}/update")
+    @PatchMapping("/users/{id}/update")
     public ResponseEntity<User> updateUser(@PathVariable Integer id, @ModelAttribute User u){
-        u.setUserId(id);
-        return ResponseEntity.ok(this.userSer.addOrUpdateUser(u));
+        User user = this.userSer.getUserByUserId(id);
+        if (u.getFirstName() != null)
+            user.setFirstName(u.getFirstName());
+
+        if (u.getLastName() != null)
+            user.setLastName(u.getLastName());
+
+        if (u.getEmail() != null)
+            user.setEmail(u.getEmail());
+
+        if (u.getPhone() != null)
+            user.setPhone(u.getPhone());
+
+        if (u.getFile() != null && !u.getFile().isEmpty()) {
+            user.setFile(u.getFile());
+        }
+        return ResponseEntity.ok(this.userSer.addOrUpdateUser(user));
     }
 
     @PostMapping("/auth/login")
