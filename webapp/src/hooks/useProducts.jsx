@@ -1,27 +1,38 @@
-import {useEffect, useState} from "react";
-import {endpoints} from "../api/Apis";
-import {useFetch} from "./useFetch";
-import {usePost} from "./usePost";
+import { useEffect, useState } from "react";
+import { endpoints } from "../api/Apis";
+import { useFetch } from "./useFetch";
+import { usePost } from "./usePost";
 
 export const useProducts = () => {
-	const {data: fetchData, error: fetchError} = useFetch(endpoints.products);
-	const { isLoading, error: postError, postData} = usePost(endpoints.productAdd);
-
+	const { data: productData, error: fetchError } = useFetch(endpoints.products);
+	const { isLoading, error: postError, postData } = usePost(endpoints.productAdd);
+	const { data: catesData, error: fetchError1 } = useFetch(endpoints.categories);
+	const { data: unitsData, error: fetchError2 } = useFetch(endpoints.units);
 	const [products, setProducts] = useState([]);
+	const [categories, setCategories] = useState([]);
+	const [units, setUnits]= useState([]);
 
 	useEffect(() => {
-		if (fetchData) {
-			setProducts(fetchData);
+		if (productData) {
+			setProducts(productData);
 		}
-	}, [fetchData]);
+	}, [productData]);
+	useEffect(()=> {
+		if (catesData){
+			setCategories(catesData)
+		}
+		if (unitsData){
+			setUnits(unitsData)
+		}
+	},[catesData, unitsData])
 
-	if (fetchError || postError) {
+	if (fetchError || postError|| fetchError1|| fetchError2) {
 		console.error(fetchError || postError);
 		return {
 			products: [],
-			addProduct: () => {},
-			updateProduct: () => {},
-			deleteProduct: () => {},
+			addProduct: () => { },
+			updateProduct: () => { },
+			deleteProduct: () => { },
 			error: true
 		};
 	}
@@ -56,19 +67,19 @@ export const useProducts = () => {
 		setProducts(prev => prev.filter(p => p.productId !== productId));
 	};
 
-	const categories = products
-		.map(p => p.category)
-		.filter(Boolean)
-		.filter((cat, index, self) =>
-			index === self.findIndex(c => c.categoryId === cat.categoryId)
-		);
-
-	const units = products
-		.map(p => p.unit)
-		.filter(Boolean)
-		.filter((unit, index, self) =>
-			index === self.findIndex(u => u.unitId === unit.unitId)
-		);
+	// const categories = products
+	// 	.map(p => p.category)
+	// 	.filter(Boolean)
+	// 	.filter((cat, index, self) =>
+	// 		index === self.findIndex(c => c.categoryId === cat.categoryId)
+	// 	);
+	//
+	// const units = products
+	// 	.map(p => p.unit)
+	// 	.filter(Boolean)
+	// 	.filter((unit, index, self) =>
+	// 		index === self.findIndex(u => u.unitId === unit.unitId)
+	// 	);
 
 
 
