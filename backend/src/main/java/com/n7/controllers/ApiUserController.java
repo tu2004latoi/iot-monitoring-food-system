@@ -20,7 +20,7 @@ public class ApiUserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers(){
-        return ResponseEntity.ok(userSer.getAllUsers());
+        return ResponseEntity.ok(userSer.getAllUsers ());
     }
 
     @GetMapping("/users/{id}")

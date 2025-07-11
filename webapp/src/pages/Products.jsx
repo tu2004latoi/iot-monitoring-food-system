@@ -13,7 +13,6 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 		const matchSearch = p.productName?.toLowerCase().includes(search.toLowerCase());
 		return matchCat && matchSearch;
 	});
-
 	const handleAdd = () => {
 		setEditProduct(null);
 		setShowModal(true);
@@ -88,7 +87,7 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 									<img src={p.image} alt={p.name} width="50" height="50" />
 								</td>
 								<td>{p.productName}</td>
-								<td>{p.category?.categoryName || "Chưa phân loại"}</td>
+								<td>{p.cateory?.categoryName || "Chưa phân loại"}</td>
 								<td>{p.status}</td>
 								<td>{p.expiryDate}</td>
 								<td>{p.detectedAt}</td>
@@ -108,7 +107,6 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 					)}
 				</tbody>
 			</table>
-
 			<AddEditProductModal
 				isOpen={showModal}
 				onClose={() => setShowModal(false)}
