@@ -3,7 +3,7 @@ import "./AddEditProductModal.css";
 import { useProducts } from "../hooks/useProducts";
 import { formatDate } from "../utils/formatters";
 const defaultForm = {
-	productId:"",
+	productId: "",
 	productName: "",
 	categoryId: "",
 	quantity: 0,
@@ -22,18 +22,16 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 
 	useEffect(() => {
 		if (initialData) {
-			console.log("data", initialData)
 			setForm({
 				productId: initialData.productId,
 				productName: initialData.productName || "",
 				quantity: initialData.quantity || 0,
-				image: initialData.image || "",
 				status: initialData.status || "",
 				expiryDate: formatDate(initialData.expiryDate),
 				detectedAt: formatDate(initialData.detectedAt),
 				notes: initialData.notes || "",
-				categoryId: initialData.category?.categoryId || "",
-				unitId: initialData.unit?.unitId || "",
+				categoryId: initialData.categoryId || "",
+				unitId: initialData.unitId || "",
 				file: null
 			});
 
@@ -53,17 +51,16 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 		const file = fileInput?.files[0] || form.file;
 
 		const finalData = {
-			productId:form.productId,
+			productId: form.productId,
 			userId: 1,
 			productName: form.productName,
-			categoryId: Number(form.categoryId),
-			unitId: Number(form.unitId),
+			categoryId: form.categoryId,
+			unitId: form.unitId,
 			expiryDate: form.expiryDate,
 			detectedAt: form.detectedAt + "T00:00:00", // ISO datetime
 			quantity: parseFloat(form.quantity),
 			notes: form.notes,
 			status: form.status,
-			image: form.image,
 			file: file,
 		};
 
@@ -84,15 +81,12 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 				<h2>{initialData ? "✏️ Sửa sản phẩm" : "➕ Thêm sản phẩm mới"}</h2>
 				<form onSubmit={handleSubmit} className="form-modern">
 					<div className="form-row">
-						<div className="form-group">
-							<input
-								id="productId"
-								name="productId"
-								value={form.productId}
-								onChange={handleChange}
-								hidden
-							/>
-						</div>
+						<input
+							id="productId"
+							name="productId"
+							value={form.productId}
+							type="hidden"
+						/>
 
 						<div className="form-group">
 							<input
@@ -183,16 +177,6 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 					</div>
 
 					<div className="form-row">
-						<div className="form-group">
-							<input
-								id="image"
-								name="image"
-								value={form.image}
-								onChange={handleChange}
-								placeholder=" "
-							/>
-							<label htmlFor="image">Link ảnh</label>
-						</div>
 						<input
 							type="file"
 							id="productFile"

@@ -1,18 +1,25 @@
 import React, { useState } from "react";
 import AddEditProductModal from "../components/AddEditProductModal";
 import "./Products.css";
-import { useProducts } from "../hooks/useProducts"
-const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
+const Products = ({ products, addProduct, updateProduct, deleteProduct, categories, units }) => {
 	const [search, setSearch] = useState("");
 	const [category, setCategory] = useState("all");
 	const [showModal, setShowModal] = useState(false);
 	const [editProduct, setEditProduct] = useState(null);
-	const { categories = [] } = useProducts();
 	const filtered = products.filter((p) => {
-		const matchCat = category === "all" || p.category?.categoryName === category;
+		const matchCat = category === "all" || getCategoryName(p.categoryId) === category;
 		const matchSearch = p.productName?.toLowerCase().includes(search.toLowerCase());
 		return matchCat && matchSearch;
 	});
+	const getCategoryName = (categoryId) => {
+		const category = categories.find(c => c.categoryId === categoryId);
+		return category?.categoryName || "Không rõ";
+	};
+
+	const getUnitName = (unitId) => {
+		const unit = units.find(u => u.unitId === unitId);
+		return unit?.unitName || "Không rõ";
+	};
 	const handleAdd = () => {
 		setEditProduct(null);
 		setShowModal(true);
@@ -24,7 +31,7 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 	};
 
 	const handleSave = (productData) => {
-		if (editProduct.productId) {
+		if (productData.productId) {
 			updateProduct(productData);
 
 		} else {
@@ -87,11 +94,11 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 									<img src={p.image} alt={p.name} width="50" height="50" />
 								</td>
 								<td>{p.productName}</td>
-								<td>{p.cateory?.categoryName || "Chưa phân loại"}</td>
+								<td>{getCategoryName(p.categoryId) || "Chưa phân loại"}</td>
 								<td>{p.status}</td>
 								<td>{p.expiryDate}</td>
 								<td>{p.detectedAt}</td>
-								<td>{p.unit?.unitName || "Không rõ"}</td>
+								<td>{getUnitName(p.unitId) || "Không rõ"}</td>
 								<td>{p.quantity}</td>
 								<td>{p.notes}</td>
 								<td>

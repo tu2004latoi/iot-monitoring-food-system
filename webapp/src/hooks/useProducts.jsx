@@ -20,6 +20,9 @@ export const useProducts = () => {
 		}
 	}, [productData]);
 	useEffect(() => {
+		setProducts(products)
+	}, [products])
+	useEffect(() => {
 		if (catesData) {
 			setCategories(catesData)
 		}
@@ -29,7 +32,6 @@ export const useProducts = () => {
 	}, [catesData, unitsData])
 
 	if (fetchError || postError || fetchError1 || fetchError2 || putError) {
-		console.error(fetchError || postError);
 		return {
 			products: [],
 			addProduct: () => { },
@@ -76,9 +78,15 @@ export const useProducts = () => {
 			console.log(`${pair[0]}:`, pair[1]);
 		}
 
-		await putData(endpoints.productUpdate(productData.productId), formData);
+		// Gửi và nhận lại sản phẩm đã cập nhật từ API
+		const updatePro = await putData(endpoints.productUpdate(productData.productId), formData);
+		// Cập nhật ngay ảnh mới
+		updatePro.categoryId = updatePro.category?.categoryId;
+		updatePro.unitId = updatePro.unit?.unitId;
 		setProducts(prev =>
-			prev.map(p => p.productId === productData.productId ? productData : p)
+			prev.map(p =>
+				p.productId === updatePro.productId ? updatePro : p
+			)
 		);
 	};
 

@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import APIs, { authApis, endpoints } from "../api/Apis";
 const AuthContext = createContext();
@@ -14,8 +14,6 @@ export const AuthProvider = ({ children }) => {
 			try {
 				const api = await authApis();
 				const res = await api.get(endpoints.profile);
-				console.log("STATUS:", res.status);
-				console.log("DATA:", res.data);
 				setUser(res.data); // ✅ Đặt user ở đây
 			} catch (err) {
 				console.error("ERR", err.response?.data || err.message);
@@ -23,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 			}
 		};
 
-		if (token || !user) {
+		if (token) {
 			fetchProfile();
 		}
 	}, [token]);
@@ -47,12 +45,11 @@ export const AuthProvider = ({ children }) => {
 	}
 
 
-	const logout = () => {
+	const logout = useCallback(() => {
 		setToken(null);
 		setUser(null);
 		localStorage.removeItem('token');
-		navigate('/login');
-	};
+	},[]);
 
 	return (
 		<AuthContext.Provider value={{ user, token, login, logout }}>
