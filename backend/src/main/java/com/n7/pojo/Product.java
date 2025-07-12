@@ -62,7 +62,7 @@ public class Product {
 
     @Transient
     @JoinColumn
-	 @JsonIgnore
+    @JsonIgnore
     private MultipartFile file;
 
     public MultipartFile getFile() {
@@ -169,8 +169,11 @@ public class Product {
         this.image = image;
     }
 
+
     public enum Status {
         notExpired, expired;
     }
+
+
 }
 

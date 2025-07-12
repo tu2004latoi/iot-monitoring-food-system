@@ -26,4 +26,36 @@ public class EnvRecord {
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
+
+    public Integer getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
+    }
+
+    public Float getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Float temperature) {
+        this.temperature = temperature;
+    }
+
+    public Float getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(Float humidity) {
+        this.humidity = humidity;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 }

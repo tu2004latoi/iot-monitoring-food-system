@@ -157,7 +157,7 @@ public class ApiProductController {
             existingProduct.setFile(file); // xử lý upload trong service
         }
 
-        if (!Boolean.TRUE.equals(existingProduct.getIsActive())) {
+        if (!Boolean.TRUE.equals(existingProduct.getActive())) {
             existingProduct.setActive(true);
         }
 

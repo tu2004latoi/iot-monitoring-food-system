@@ -25,7 +25,7 @@ public class MqttSubscriber {
 
     private void startSubscriber() {
         try {
-            String clientId = mqttProperties.getClientId() + "-" + java.util.UUID.randomUUID(); // clientId động
+            String clientId = mqttProperties.getClientId() + "-" + java.util.UUID.randomUUID();
             MqttClient client = new MqttClient(mqttProperties.getBroker(), clientId, null);
 
             MqttConnectOptions options = new MqttConnectOptions();
