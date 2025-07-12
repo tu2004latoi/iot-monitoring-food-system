@@ -22,6 +22,10 @@ public class EnvRecord {
     @Column(name = "humidity")
     private Float humidity;
 
+    @ManyToOne
+    @JoinColumn(name = "device_id")
+    private Device device;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
