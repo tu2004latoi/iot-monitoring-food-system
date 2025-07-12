@@ -1,13 +1,8 @@
 import "./Home.css";
-const Home = ({ products, categories, units }) => {
+const Home = ({ products, categories  }) => {
 	const getCategoryName = (categoryId) => {
 		const category = categories.find(c => c.categoryId === categoryId);
 		return category?.categoryName || "Không rõ";
-	};
-
-	const getUnitName = (unitId) => {
-		const unit = units.find(u => u.unitId === unitId);
-		return unit?.unitName || "Không rõ";
 	};
 	return (
 		<div className="dashboard-container">
