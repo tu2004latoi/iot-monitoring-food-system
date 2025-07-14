@@ -2,17 +2,27 @@ import React, { useState } from "react";
 import AddEditProductModal from "../components/AddEditProductModal";
 import "./Products.css";
 import { useProducts } from "../hooks/useProducts"
-const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
+const Products = ({ products, categories, units, addProduct, updateProduct, deleteProduct }) => {
 	const [search, setSearch] = useState("");
 	const [category, setCategory] = useState("all");
 	const [showModal, setShowModal] = useState(false);
 	const [editProduct, setEditProduct] = useState(null);
-	const { categories = [] } = useProducts();
+
 	const filtered = products.filter((p) => {
 		const matchCat = category === "all" || p.category?.categoryName === category;
 		const matchSearch = p.productName?.toLowerCase().includes(search.toLowerCase());
 		return matchCat && matchSearch;
 	});
+
+	const getCategoryName = (categoryId) => {
+		const category = categories.find(c => c.categoryId === categoryId);		
+		return category ? category.categoryName : "Chưa phân loại";
+	};
+	const getUnitName = (unitId) => {
+		const unit = units.find(u => u.unitId === unitId);
+		return unit ? unit.unitName : "Không rõ";
+	};
+
 	const handleAdd = () => {
 		setEditProduct(null);
 		setShowModal(true);
@@ -87,11 +97,11 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
 									<img src={p.image} alt={p.name} width="50" height="50" />
 								</td>
 								<td>{p.productName}</td>
-								<td>{p.cateory?.categoryName || "Chưa phân loại"}</td>
+								<td>{getCategoryName(p.categoryId)}</td>
 								<td>{p.status}</td>
 								<td>{p.expiryDate}</td>
 								<td>{p.detectedAt}</td>
-								<td>{p.unit?.unitName || "Không rõ"}</td>
+								<td>{getUnitName(p.unitId)}</td>
 								<td>{p.quantity}</td>
 								<td>{p.notes}</td>
 								<td>

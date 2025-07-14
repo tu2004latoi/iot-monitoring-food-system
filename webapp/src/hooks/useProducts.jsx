@@ -76,9 +76,9 @@ export const useProducts = () => {
 			console.log(`${pair[0]}:`, pair[1]);
 		}
 
-		await putData(endpoints.productUpdate(productData.productId), formData);
+		const data = await putData(endpoints.productUpdate(productData.productId), formData);
 		setProducts(prev =>
-			prev.map(p => p.productId === productData.productId ? productData : p)
+			prev.map(p => p.productId === data.productId ? data : p)
 		);
 	};
 
