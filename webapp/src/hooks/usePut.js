@@ -26,7 +26,7 @@ export const usePut = () => {
 		dispatch({type: "putAPI/request"});
 
 		try {
-			const API = await authApis();
+			const API =  authApis();
 
 			const isFormData = body instanceof FormData;
 

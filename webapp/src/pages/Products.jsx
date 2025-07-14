@@ -34,7 +34,7 @@ const Products = ({ products, categories, units, addProduct, updateProduct, dele
 	};
 
 	const handleSave = (productData) => {
-		if (editProduct.productId) {
+		if (productData.productId) {
 			updateProduct(productData);
 
 		} else {
