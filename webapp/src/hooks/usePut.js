@@ -26,7 +26,7 @@ export const usePut = () => {
 		dispatch({type: "putAPI/request"});
 
 		try {
-			const API = await authApis();
+			const API =  authApis();
 
 			const isFormData = body instanceof FormData;
 
@@ -34,8 +34,9 @@ export const usePut = () => {
 				? {} // Để axios tự set content-type cho FormData
 				: {headers: {"Content-Type": "application/json"}};
 
-			const res = await API.put(url, body, config);
+			const res = await API.patch(url, body, config);
 			dispatch({type: "putAPI/success", data: res.data});
+			return res.data;
 
 		} catch (err) {
 			dispatch({type: "putAPI/error", error: err});

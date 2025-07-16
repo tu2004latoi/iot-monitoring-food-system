@@ -15,4 +15,5 @@ public interface DeviceService {
     Device getDeviceByDeviceCode(String code);
     Device getOrCreateByDeviceCode(String deviceCode);
     List<Device> getDeviceByUser(User u);
+    Device registryUserToDevice(Device device, User user);
 }
