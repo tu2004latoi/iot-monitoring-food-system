@@ -7,9 +7,7 @@ import com.n7.services.DeviceService;
 import com.n7.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.*;
@@ -41,6 +39,18 @@ public class ApiDeviceController {
         return ResponseEntity.ok(listData);
     }
 
+    @GetMapping("/devices/{id}")
+    public ResponseEntity<?> getDeviceById(@PathVariable int id){
+        Device device = this.deviceService.getDeviceById(id);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("deviceId", device.getDeviceId());
+        data.put("userId", device.getUser() != null ? device.getUser().getUserId() : null); // ✅ tránh null
+        data.put("deviceName", device.getDeviceName());
+        data.put("deviceCode", device.getDeviceCode());
+
+        return ResponseEntity.ok(data);
+    }
+
     @GetMapping("/my-devices")
     public ResponseEntity<?> getAllMyDevices(Principal principal){
         String username = principal.getName();
@@ -58,5 +68,20 @@ public class ApiDeviceController {
         }
 
         return ResponseEntity.ok(listData);
+    }
+
+    @GetMapping("/devices/code/{deviceCode}")
+    public ResponseEntity<Device> getDeviceByCode(@PathVariable String deviceCode){
+        Device device = this.deviceService.getDeviceByDeviceCode(deviceCode);
+
+        return ResponseEntity.ok(device);
+    }
+
+    @PostMapping("/devices/code/{deviceCode}")
+    public ResponseEntity<Device> registryUserToDevice(@PathVariable String deviceCode, Principal principal){
+        Device device = this.deviceService.getDeviceByDeviceCode(deviceCode);
+        User user = this.userService.getUserByUsername(principal.getName());
+
+        return ResponseEntity.ok(this.deviceService.registryUserToDevice(device, user));
     }
 }

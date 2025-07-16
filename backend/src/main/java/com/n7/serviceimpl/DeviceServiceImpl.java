@@ -64,4 +64,11 @@ public class DeviceServiceImpl implements DeviceService {
         return this.deviceRepository.findByUser(u).orElse(Collections.emptyList());
     }
 
+    @Override
+    public Device registryUserToDevice(Device device, User user) {
+        device.setUser(user);
+        this.deviceRepository.save(device);
+        return device;
+    }
+
 }

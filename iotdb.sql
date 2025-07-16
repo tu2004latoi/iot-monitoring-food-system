@@ -47,12 +47,22 @@ CREATE TABLE products (
     foreign key (unit_id) references units(unit_id) on delete set null
 );
 
+CREATE TABLE devices (
+	device_id int auto_increment primary key,
+    user_id int,
+    device_name varchar(50),
+    device_code varchar(50) unique,
+    foreign key (user_id) references users(user_id) on delete set null
+);
+
 -- 4. Tạo bảng env_records (ghi nhận nhiệt độ, độ ẩm)
 CREATE TABLE env_records (
     record_id INT AUTO_INCREMENT PRIMARY KEY,
     temperature FLOAT,
     humidity FLOAT,
-    timestamp DATETIME
+    device_id int,
+    timestamp DATETIME,
+    foreign key (device_id) references devices(device_id) on delete set null
 );
 
 -- 5. Tạo bảng env_suggestions (gợi ý môi trường bảo quản)
