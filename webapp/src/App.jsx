@@ -9,8 +9,10 @@ import { useProducts } from "./hooks/useProducts";
 import Settings from "./pages/Settings";
 import { FaBars } from "react-icons/fa";
 import "./App.css";
-import Testapp from "./Testapp";
 import { useAuth } from "./context/AuthContext"; // Thêm import
+import Categories from "./pages/Categories";
+import  Devices  from "./pages/Devices";
+import { useDevices } from "./hooks/useDevices";
 
 // Tạo PrivateRoute component
 const PrivateRoute = ({ children }) => {
@@ -37,14 +39,21 @@ function App() {
     updateProduct,
     deleteProduct,
   } = useProducts();
+
+  const {
+    devices,
+    addDevice,
+    updateDevice,
+    deleteDevice,
+  } = useDevices();
+
   return (
     <div className={`app ${theme}`}>
       <Header toggleTheme={toggleTheme} currentTheme={theme} />
       {token && (
         <FaBars
-          className={`toggle-button ${
-            isSidebarOpen ? "sidebar-open" : "sidebar-closed"
-          }`}
+          className={`toggle-button ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+            }`}
           onClick={toggleSidebar}
         />
       )}
@@ -56,9 +65,8 @@ function App() {
         )}
 
         <div
-          className={`right ${
-            isSidebarOpen ? "sidebar-open" : "sidebar-closed"
-          }`}
+          className={`right ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+            }`}
         >
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -93,7 +101,20 @@ function App() {
               path="/categories"
               element={
                 <PrivateRoute>
-                  <Products categories={categories} />
+                  <Categories categories={categories} />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/devices"
+              element={
+                <PrivateRoute>
+                  <Devices
+                    devices={devices}
+                    addDevice={addDevice}
+                    updateDevice={updateDevice}
+                    deleteDevice={deleteDevice}
+                  />
                 </PrivateRoute>
               }
             />
@@ -102,14 +123,6 @@ function App() {
               element={
                 <PrivateRoute>
                   <Settings />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/test"
-              element={
-                <PrivateRoute>
-                  <Testapp />
                 </PrivateRoute>
               }
             />
