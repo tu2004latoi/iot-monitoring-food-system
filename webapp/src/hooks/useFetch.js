@@ -33,7 +33,7 @@ export const useFetch = (url) => {
                 isLoading: true,
             });
             try {
-                const API = await authApis();
+                const API =  authApis();
                 const res = await API.get(url);
                 const json = res.data;
 

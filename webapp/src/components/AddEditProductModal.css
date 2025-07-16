@@ -14,8 +14,10 @@
 .modal.modern {
   background: #fff;
   padding: 30px;
+  padding-top: 5px;
   border-radius: 16px;
   width: 600px;
+  max-height: 95%;
   max-width: 95%;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   font-family: 'Segoe UI', sans-serif;

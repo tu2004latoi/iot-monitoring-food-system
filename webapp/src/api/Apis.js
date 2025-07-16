@@ -29,11 +29,10 @@ export const endpoints = {
 	unitDelete:(id)=> `/units/${id}`,
 }
 
-export const authApis = async () => {
-	const token = await AsyncStorage.getItem('token');
+export const authApis = () => {
+	const token = localStorage.getItem('token');
 	if (!token) {
-		console.error("Token không tồn tại");
-		throw new Error("Token không tồn tại");
+		return;
 	}
 	return axios.create({
 		baseURL: BASE_URL,
