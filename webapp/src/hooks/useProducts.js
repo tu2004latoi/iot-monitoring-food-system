@@ -66,6 +66,9 @@ export const useProducts = () => {
   };
 
   const updateProduct = async (productData) => {
+    if (productData === null) {
+      return;
+    }
     const formData = new FormData();
     formData.append("productId", productData.productId);
     formData.append("productName", productData.productName);

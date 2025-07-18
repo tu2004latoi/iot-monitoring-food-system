@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import AddEditProductModal from "../components/AddEditProductModal";
 import "./Products.css";
-import { useProducts } from "../hooks/useProducts"
 const Products = ({ products, categories, units, addProduct, updateProduct, deleteProduct }) => {
 	const [search, setSearch] = useState("");
 	const [category, setCategory] = useState("all");
