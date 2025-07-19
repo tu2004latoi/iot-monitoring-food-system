@@ -5,7 +5,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Products from "./pages/Products";
-import { useProducts } from "./hooks/useProducts";
+import {useProducts}  from "./hooks/useProducts";
 import Settings from "./pages/Settings";
 import { FaBars } from "react-icons/fa";
 import "./App.css";

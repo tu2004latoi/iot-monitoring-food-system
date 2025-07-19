@@ -40,7 +40,7 @@ export const useDevices = () => {
     Data.deviceCode =deviceData.deviceCode;
     
 
-    const response = await postData(formData);
+    const response = await postData(Data);
     setdevices((prev) => [...prev, response]);
   };
 
