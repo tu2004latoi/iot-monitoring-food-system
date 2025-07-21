@@ -1,60 +1,61 @@
-import {useState} from 'react';
-import {useAuth} from '../context/AuthContext';
-import {TextField, Button, Container, Typography, Box} from '@mui/material';
-import {toast} from 'react-toastify';
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import './Login.css';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = () => {
-    const {login} = useAuth();
-    const [credentials, setCredentials] = useState({
-        username: '',
-        password: '',
-    });
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [credentials, setCredentials] = useState({
+    username: '',
+    password: '',
+  });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await login(credentials);
-            console.log("dang nhap thanh cong")
-            toast.success('Đăng nhập thành công!');
-        } catch (error) {
-            toast.error('Sai tên đăng nhập hoặc mật khẩu!');
-            console.log("dang nhap that bai", error)
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await login(credentials);
+      toast.success('Đăng nhập thành công!');
+      navigate('/products'); // Chuyển trang sau khi đăng nhập
+    } catch (error) {
+      toast.error('Sai tên đăng nhập hoặc mật khẩu!');
+      console.log("Đăng nhập thất bại", error);
+    }
+  };
 
-    return (
-        <Container maxWidth="xs">
-            <Box sx={{mt: 8, textAlign: 'center'}}>
-                <Typography variant="h4">Đăng nhập</Typography>
-                <form onSubmit={handleSubmit}>
-                    <TextField
-                        label="Tên đăng nhập"
-                        fullWidth
-                        margin="normal"
-                        value={credentials.username}
-                        inputProps={{
-                            autoComplete: "username", // Thêm dòng này
-                        }}
-                        onChange={(e) => setCredentials({...credentials, username: e.target.value})}
-                    />
-                    <TextField
-                        label="Mật khẩu"
-                        type="password"
-                        fullWidth
-                        margin="normal"
-                        value={credentials.password}
-                        inputProps={{
-                            autoComplete: "current-password", // Thêm dòng này
-                        }}
-                        onChange={(e) => setCredentials({...credentials, password: e.target.value})}
-                    />
-                    <Button type="submit" variant="contained" fullWidth sx={{mt: 3}}>
-                        Đăng nhập
-                    </Button>
-                </form>
-            </Box>
-        </Container>
-    );
+  return (
+    <div className="body flex">
+      <div className="login-container">
+        <div className="slogan">
+          Nhận diện nhanh – Nhắc hạn kịp thời.<br />
+          Quản lý thực phẩm chưa bao giờ dễ đến thế.
+        </div>
+        <div className="flex">
+          <form className="login-form flex" onSubmit={handleSubmit}>
+            <h2 className="login-title">Đăng nhập ngay tại đây.</h2>
+            <input
+              type="text"
+              placeholder="Tên đăng nhập"
+              value={credentials.username}
+              onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+              required
+              className="login-input"
+            />
+            <input
+              type="password"
+              placeholder="Mật khẩu"
+              value={credentials.password}
+              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+              required
+              className="login-input"
+            />
+            <button type="submit" className="login-button">Đăng nhập</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

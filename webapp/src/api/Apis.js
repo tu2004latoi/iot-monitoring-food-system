@@ -11,6 +11,7 @@ export const endpoints = {
 	userUpdate: (id) => `/users/${id}/update`,
 	userDelete: (id) => `/users/${id}`,
 
+
 	products: '/products',
 	productAdd: '/products/add',
 	productUpdate: (id) => `/products/${id}/update`,
@@ -24,20 +25,15 @@ export const endpoints = {
 
 	units: '/units',
 	unitDetail:(id)=> `/units/${id}`,
-  unitAdd: '/units/add',
+	unitAdd: '/units/add',
 	unitDelete:(id)=> `/units/${id}`,
-
-  devices: '/devices',
-  devicesDetail: (id) => `/devices/${id}`,
-  myDevices: '/my-devices',
-  devicesCode: (deviceCode) => `/devices/code/${deviceCode}`,
-
 }
 
-export const authApis = () => {
-	const token = localStorage.getItem('token');
+export const authApis = async () => {
+	const token = await AsyncStorage.getItem('token');
 	if (!token) {
-		return;
+		console.error("Token không tồn tại");
+		throw new Error("Token không tồn tại");
 	}
 	return axios.create({
 		baseURL: BASE_URL,
