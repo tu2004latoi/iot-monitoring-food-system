@@ -78,10 +78,17 @@ public class ApiDeviceController {
     }
 
     @PostMapping("/devices/code/{deviceCode}")
-    public ResponseEntity<Device> registryUserToDevice(@PathVariable String deviceCode, Principal principal){
+    public ResponseEntity<Device> registryUserToDevice(@PathVariable String deviceCode, @ModelAttribute User user){
         Device device = this.deviceService.getDeviceByDeviceCode(deviceCode);
-        User user = this.userService.getUserByUsername(principal.getName());
 
         return ResponseEntity.ok(this.deviceService.registryUserToDevice(device, user));
+    }
+
+    @DeleteMapping("/devices/code/{deviceCode}")
+    public ResponseEntity<String> deleteDeviceByCode(@PathVariable String deviceCode){
+        Device device = this.deviceService.getDeviceByDeviceCode(deviceCode);
+        this.deviceService.deleteDevice(device);
+
+        return ResponseEntity.ok("ok");
     }
 }

@@ -11,7 +11,6 @@ export const endpoints = {
 	userUpdate: (id) => `/users/${id}/update`,
 	userDelete: (id) => `/users/${id}`,
 
-
 	products: '/products',
 	productAdd: '/products/add',
 	productUpdate: (id) => `/products/${id}/update`,
@@ -25,8 +24,14 @@ export const endpoints = {
 
 	units: '/units',
 	unitDetail:(id)=> `/units/${id}`,
-	unitAdd: '/units/add',
+  unitAdd: '/units/add',
 	unitDelete:(id)=> `/units/${id}`,
+
+  devices: '/devices',
+  devicesDetail: (id) => `/devices/${id}`,
+  myDevices: '/my-devices',
+  devicesCode: (deviceCode) => `/devices/code/${deviceCode}`,
+
 }
 
 export const authApis = () => {

@@ -140,11 +140,11 @@ const Settings = () => {
       for (let [key, value] of formData.entries()) {
         console.log(key, value);
       }
-	  console.log("pass", formData.get("password"));
-
+      console.log("pass", formData.get("password"));
+      
       // Simulate API call
       const api = authApis(); // API đã có token
-      const response = await api.patch(
+      await api.patch(
         endpoints.userUpdate(user.userId),
         formData,
         {
