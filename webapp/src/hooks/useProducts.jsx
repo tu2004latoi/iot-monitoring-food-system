@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import Apis, { authApis, endpoints } from "../api/Apis";
+import Apis, { endpoints } from "../api/Apis";
 import { useFetch } from "./useFetch";
 import { usePost } from "./usePost";
 import { usePut } from "./usePut";
 import { useAuth } from "../context/AuthContext";
 
 export const useProducts = () => {
-  const {user} = useAuth(); 
-  const [addLoading, setAddLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
+  const { user } = useAuth();
   const { data: productData, error: fetchError } = useFetch(endpoints.products);
   const {
     isLoading,
@@ -29,14 +27,17 @@ export const useProducts = () => {
       setProducts(productData);
     }
   }, [user, productData]);
+
   useEffect(() => {
-    if (catesData) {
-      setCategories(catesData);
+    if (user) {
+      if (catesData) {
+        setCategories(catesData);
+      }
+      if (unitsData) {
+        setUnits(unitsData);
+      }
     }
-    if (unitsData) {
-      setUnits(unitsData);
-    }
-  }, [catesData, unitsData]);
+  }, [user, catesData, unitsData]);
 
   if (fetchError || postError || fetchError1 || fetchError2 || putError) {
     // console.error(fetchError || postError);
@@ -127,8 +128,6 @@ export const useProducts = () => {
     deleteProduct,
     categories,
     units,
-    isLoading,
-    addLoading,
-    updateLoading,
+    isLoading
   };
 };

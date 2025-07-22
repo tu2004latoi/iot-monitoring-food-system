@@ -23,7 +23,7 @@ const PrivateRoute = ({ children }) => {
 function App() {
   const [theme, setTheme] = useState("light");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { user, loading  } = useAuth();
+  const { user } = useAuth();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -51,15 +51,15 @@ function App() {
     <div className={`app ${theme}`}>
       <Header toggleTheme={toggleTheme} currentTheme={theme} />
       {user && (
-        <FaBars
-          className={`toggle-button ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+        <FaBars 
+          className={`text-4xl toggle-button ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
             }`}
           onClick={toggleSidebar}
         />
       )}
-      <div className="container">
+      <div className="container flex h-screen w-screen">
         {user && (
-          <div className={`left ${isSidebarOpen ? "open" : "closed"}`}>
+          <div className={`h-screen left ${isSidebarOpen ? "open" : "closed"}`}>
             <Sidebar />
           </div>
         )}
