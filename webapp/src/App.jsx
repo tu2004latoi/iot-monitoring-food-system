@@ -13,6 +13,7 @@ import { useAuth } from "./context/AuthContext"; // Thêm import
 import Categories from "./pages/Categories";
 import Devices from "./pages/Devices";
 import { useDevices } from "./hooks/useDevices";
+import { useCategories } from "./hooks/useCategories";
 
 // Tạo PrivateRoute component
 const PrivateRoute = ({ children }) => {
@@ -32,13 +33,18 @@ function App() {
 
 
   const {
-    categories,
     units,
     products,
     addProduct,
     updateProduct,
     deleteProduct,
   } = useProducts();
+  
+  const {
+    categories,
+    addCates,
+    deleteCates,
+  } = useCategories();
 
   const {
     devices,
@@ -101,7 +107,11 @@ function App() {
               path="/categories"
               element={
                 <PrivateRoute>
-                  <Categories categories={categories} />
+                  <Categories 
+                    categories={categories} 
+                    addCates={addCates}
+                    deleteCates={deleteCates}
+                  />
                 </PrivateRoute>
               }
             />
