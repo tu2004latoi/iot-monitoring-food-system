@@ -65,7 +65,7 @@ function App() {
         )}
 
         <div
-          className={`right ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+          className={`h-screen right ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
             }`}
         >
           <Routes>

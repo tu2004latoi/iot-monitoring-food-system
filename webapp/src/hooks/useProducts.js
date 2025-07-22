@@ -17,7 +17,7 @@ export const useProducts = () => {
     endpoints.categories
   );
   const { data: unitsData, error: fetchError2 } = useFetch(endpoints.units);
-  const { error: putError, putData } = usePut();
+  const { error: putError, putData } = usePut(endpoints.productUpdate);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [units, setUnits] = useState([]);
@@ -96,10 +96,7 @@ export const useProducts = () => {
         console.log(`${key}:`, value);
       }
 
-      const response = await putData(
-        endpoints.productUpdate(p.productId),
-        formData
-      );
+      const response = await putData(formData);
       console.log("data tra ve", response);
 
       // Cập nhật sản phẩm trong danh sách
