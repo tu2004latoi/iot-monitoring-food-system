@@ -17,6 +17,7 @@ const defaultForm = {
 };
 
 const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
+<<<<<<< HEAD
 	const { categories = [], units = [] } = useProducts()
 	const [form, setForm] = useState(defaultForm);
 
@@ -36,22 +37,56 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 				unitId: initialData.unit?.unitId || "",
 				file: null
 			});
+=======
+  const { categories = [], units = [] } = useProducts();
+  const [form, setForm] = useState(defaultForm);
+  const [loading, setLoading] = useState(false); // Thêm state loading
+
+  useEffect(() => {
+
+    if (isOpen && initialData) {
+      setForm({
+        productId: initialData.productId,
+        productName: initialData.productName || "",
+        quantity: initialData.quantity || 0,
+        image: initialData.image || "",
+        status: initialData.status || "",
+        expiryDate: formatDate(initialData.expiryDate),
+        detectedAt: formatDate(initialData.detectedAt),
+        notes: initialData.notes || "",
+        categoryId: initialData.categoryId || "",
+        unitId: initialData.unitId || "",
+        file: null,
+      });
+
+    } else {
+      setForm(defaultForm);
+    }
+  }, [initialData, isOpen]);
+>>>>>>> dev
 
 		} else {
 			setForm(defaultForm);
 		}
 	}, [initialData]);
 
+<<<<<<< HEAD
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setForm((prev) => ({ ...prev, [name]: value }));
 	};
+=======
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Bắt đầu loading
+>>>>>>> dev
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const fileInput = document.querySelector("#productFile");
 		const file = fileInput?.files[0] || form.file;
 
+<<<<<<< HEAD
 		const finalData = {
 			productId: form.productId,
 			userId: 1,
@@ -75,6 +110,33 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 			console.error("Lỗi lưu sản phẩm:", error);
 		}
 	};
+=======
+    const finalData = {
+      productId: form.productId,
+      userId: 1,
+      productName: form.productName,
+      categoryId:form.categoryId,
+      unitId: form.unitId,
+      expiryDate: form.expiryDate,
+      detectedAt: form.detectedAt + "T00:00:00", // ISO datetime
+      quantity: form.quantity,
+      notes: form.notes,
+      status: form.status,
+      image: form.image,
+      file: file,
+    };
+
+    try {
+      await onSave(finalData); // Chờ lưu xong
+      onClose();
+      setForm(defaultForm);
+    } catch (error) {
+      console.error("Lỗi lưu sản phẩm:", error);
+    } finally {
+      setLoading(false); // Kết thúc loading
+    }
+  };
+>>>>>>> dev
 
 	if (!isOpen) return null;
 
@@ -223,6 +285,7 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 
 
 
+<<<<<<< HEAD
 
 					<div className="modal-buttons">
 						<button type="submit" className="save-btn">💾 Lưu</button>
@@ -232,6 +295,28 @@ const AddEditProductModal = ({ isOpen, onClose, onSave, initialData }) => {
 			</div >
 		</div >
 	);
+=======
+          <div className="modal-buttons">
+            <button type="submit" className="save-btn" disabled={loading}>
+              {loading ? "Đang lưu..." : "Lưu"}
+            </button>
+            
+            <button type="button" onClick={onClose} className="cancel-btn" disabled={loading}>
+              ❌ Hủy
+            </button>
+          </div>
+          { loading&&(
+            <div className="loading-spinner" style={{ textAlign: 'center', marginTop: 10 }}>
+              <div className="lds-dual-ring"></div>
+              <span role="status" className="mt-4 text-base text-green-700">Đang xử lý, vui lòng chờ...</span>
+            </div>
+          )}
+          
+        </form>
+      </div>
+    </div>
+  );
+>>>>>>> dev
 };
 
 export default AddEditProductModal;
