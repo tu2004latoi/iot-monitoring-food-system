@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import AddEditProductModal from "../components/AddEditProductModal";
 import "./Products.css";
-<<<<<<< HEAD
 import { useProducts } from "../hooks/useProducts";
-=======
-const Products = ({ products, categories, units, addProduct, updateProduct, deleteProduct }) => {
-	const [search, setSearch] = useState("");
-	const [category, setCategory] = useState("all");
-	const [showModal, setShowModal] = useState(false);
-	const [editProduct, setEditProduct] = useState(null);
->>>>>>> dev
 
 const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
   // State cho tìm kiếm, danh mục, modal và chỉnh sửa
@@ -50,7 +42,6 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
       if (sortOrder === "asc") return dateA - dateB;
       if (sortOrder === "desc") return dateB - dateA;
 
-<<<<<<< HEAD
       return 0; // không sắp xếp theo ngày
     });
 
@@ -60,16 +51,6 @@ const Products = ({ products, addProduct, updateProduct, deleteProduct }) => {
     acc[p.productName].push(p);
     return acc;
   }, {});
-=======
-	const handleSave = async (productData) => {
-		if (productData.productId) {
-			await updateProduct(productData);
-		} else {
-			await addProduct(productData);
-		}
-		setShowModal(false);
-	};
->>>>>>> dev
 
   // Hiển thị form thêm mới
   const handleAdd = () => {

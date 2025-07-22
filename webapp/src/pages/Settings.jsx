@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthContext";
 import "./Settings.css"
 import { authApis, endpoints } from "../api/Apis";
 const Settings = () => {
-<<<<<<< HEAD
 	const { user } = useAuth();
 	const [form, setForm] = useState({
 		username: user?.username || "",
@@ -22,23 +21,6 @@ const Settings = () => {
 
 	const validateForm = () => {
 		const newErrors = {};
-=======
-  const { user ,setUser} = useAuth();
-  const [form, setForm] = useState({
-    username: user?.username ,
-    email: user?.email ,
-    firstName: user?.firstName,
-    lastName: user?.lastName ,
-    phone: user?.phone ,
-    avatar: user?.avatar,
-    password: "",
-    confirmPassword: "",
-  });
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
->>>>>>> dev
 
 		// Username validation
 		if (!form.username.trim()) {
@@ -163,33 +145,11 @@ const Settings = () => {
 		} catch (error) {
 			console.error("Error updating settings:", error);
 
-<<<<<<< HEAD
 			setErrors({ submit: "Có lỗi xảy ra khi lưu cài đặt. Vui lòng thử lại." });
 		} finally {
 			setIsLoading(false);
 		}
 	};
-=======
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-      console.log("pass", formData.get("password"));
-      
-      // Simulate API call
-      const api = authApis(); // API đã có token
-      const res=await api.patch(
-        endpoints.userUpdate(user.userId),
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      setUser(res.data);
-    //   console.log(response.data);
-      setSuccessMessage("Cài đặt đã được lưu thành công!");
->>>>>>> dev
 
 	return (
 		<div className="settings-container">
