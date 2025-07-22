@@ -22,7 +22,7 @@ export const useDevices = () => {
 
 
   if (fetchError || postError || putError) {
-    console.error(fetchError || postError);
+    // console.error(fetchError || postError);
     return {
       devices: [],
       adddevice: () => {},

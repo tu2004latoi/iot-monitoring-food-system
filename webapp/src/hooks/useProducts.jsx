@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import Apis, { endpoints } from "../api/Apis";
+import Apis, { authApis, endpoints } from "../api/Apis";
 import { useFetch } from "./useFetch";
 import { usePost } from "./usePost";
 import { usePut } from "./usePut";
+import { useAuth } from "../context/AuthContext";
 
 export const useProducts = () => {
+  const {user} = useAuth(); 
   const [addLoading, setAddLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const { data: productData, error: fetchError } = useFetch(endpoints.products);
@@ -23,10 +25,10 @@ export const useProducts = () => {
   const [units, setUnits] = useState([]);
 
   useEffect(() => {
-    if (productData) {
+    if (user && productData) {
       setProducts(productData);
     }
-  }, [productData]);
+  }, [user, productData]);
   useEffect(() => {
     if (catesData) {
       setCategories(catesData);
@@ -37,12 +39,12 @@ export const useProducts = () => {
   }, [catesData, unitsData]);
 
   if (fetchError || postError || fetchError1 || fetchError2 || putError) {
-    console.error(fetchError || postError);
+    // console.error(fetchError || postError);
     return {
       products: [],
-      addProduct: () => {},
-      updateProduct: () => {},
-      deleteProduct: () => {},
+      addProduct: () => { },
+      updateProduct: () => { },
+      deleteProduct: () => { },
       error: true,
     };
   }
@@ -53,7 +55,7 @@ export const useProducts = () => {
       const formData = new FormData();
 
       formData.append("productName", productData.productName);
-      formData.append("userId", 1);
+      formData.append("userId", user.userId);
       formData.append("categoryId", productData.categoryId);
       formData.append("expiryDate", productData.expiryDate); // dạng yyyy-MM-dd
       formData.append("detectedAt", productData.detectedAt); // dạng yyyy-MM-ddTHH:mm:ss
@@ -78,30 +80,30 @@ export const useProducts = () => {
       if (p === null) {
         return;
       }
-      
+
       const formData = new FormData();
       formData.append("productId", p.productId);
       formData.append("productName", p.productName);
-      formData.append("userId", 1);
+      formData.append("userId", user.userId);
       formData.append("categoryId", p.categoryId);
-      formData.append("expiryDate", p.expiryDate); 
-      formData.append("detectedAt", p.detectedAt); 
+      formData.append("expiryDate", p.expiryDate);
+      formData.append("detectedAt", p.detectedAt);
       formData.append("quantity", p.quantity);
       formData.append("notes", p.notes);
       formData.append("status", p.status);
       formData.append("file", p.file);
 
-      console.log("Data truoc khi put: " )
+      console.log("Data truoc khi put: ")
       for (let [key, value] of formData.entries()) {
         console.log(`${key}:`, value);
       }
-      
-      const response=await putData(
+
+      const response = await putData(
         endpoints.productUpdate(p.productId),
         formData
       );
       console.log("data tra ve", response);
-     
+
       // Cập nhật sản phẩm trong danh sách
       const data = await Apis.get(endpoints.products);
       setProducts(data.data);

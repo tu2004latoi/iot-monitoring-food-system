@@ -5,31 +5,31 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Products from "./pages/Products";
-import {useProducts}  from "./hooks/useProducts";
+import { useProducts } from "./hooks/useProducts";
 import Settings from "./pages/Settings";
 import { FaBars } from "react-icons/fa";
 import "./App.css";
 import { useAuth } from "./context/AuthContext"; // Thêm import
 import Categories from "./pages/Categories";
-import  Devices  from "./pages/Devices";
+import Devices from "./pages/Devices";
 import { useDevices } from "./hooks/useDevices";
 
 // Tạo PrivateRoute component
 const PrivateRoute = ({ children }) => {
-  const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" />;
 };
 
 function App() {
   const [theme, setTheme] = useState("light");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { token } = useAuth();
-
+  const { user, loading  } = useAuth();
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   const toggleTheme = () =>
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+
 
   const {
     categories,
@@ -47,10 +47,10 @@ function App() {
     deleteDevice,
   } = useDevices();
 
-  return (
+  return(
     <div className={`app ${theme}`}>
       <Header toggleTheme={toggleTheme} currentTheme={theme} />
-      {token && (
+      {user && (
         <FaBars
           className={`toggle-button ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
             }`}
@@ -58,7 +58,7 @@ function App() {
         />
       )}
       <div className="container">
-        {token && (
+        {user && (
           <div className={`left ${isSidebarOpen ? "open" : "closed"}`}>
             <Sidebar />
           </div>

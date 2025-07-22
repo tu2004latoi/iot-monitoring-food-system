@@ -1,6 +1,9 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 export const BASE_URL = 'http://localhost:8080/api/';
+import Cookies from "js-cookie"; 
+
+
 
 export const endpoints = {
 	login: '/auth/login',
@@ -35,12 +38,13 @@ export const endpoints = {
 }
 
 export const authApis = () => {
-	const token = localStorage.getItem('token');
+	const token = Cookies.get("token");
 	if (!token) {
 		return;
 	}
 	return axios.create({
 		baseURL: BASE_URL,
+		withCredentials: true,
 		headers: {
 			'Authorization': `Bearer ${token}`
 		}

@@ -3,15 +3,14 @@ import { useAuth } from "../context/AuthContext";
 import "./Settings.css";
 import { authApis, endpoints } from "../api/Apis";
 const Settings = () => {
-  const { user } = useAuth();
-
+  const { user ,setUser} = useAuth();
   const [form, setForm] = useState({
-    username: user?.username || "",
-    email: user?.email || "",
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    phone: user?.phone || "",
-    avatar: user?.avatar || "",
+    username: user?.username ,
+    email: user?.email ,
+    firstName: user?.firstName,
+    lastName: user?.lastName ,
+    phone: user?.phone ,
+    avatar: user?.avatar,
     password: "",
     confirmPassword: "",
   });
@@ -144,7 +143,7 @@ const Settings = () => {
       
       // Simulate API call
       const api = authApis(); // API đã có token
-      await api.patch(
+      const res=await api.patch(
         endpoints.userUpdate(user.userId),
         formData,
         {
@@ -153,6 +152,7 @@ const Settings = () => {
           },
         }
       );
+      setUser(res.data);
     //   console.log(response.data);
       setSuccessMessage("Cài đặt đã được lưu thành công!");
 
