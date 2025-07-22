@@ -13,7 +13,8 @@ public class WebSocketController {
     private SimpMessagingTemplate messagingTemplate;
 
     public void sendDataToClients(EnvRecordDTO dto) {
-        messagingTemplate.convertAndSend("/topic/esp32", dto);
+        String topic = "/topic/esp32/" + dto.getDeviceCode();
+        messagingTemplate.convertAndSend(topic, dto);
     }
 }
 
