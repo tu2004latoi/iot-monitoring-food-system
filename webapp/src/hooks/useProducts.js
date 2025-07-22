@@ -51,7 +51,6 @@ export const useProducts = () => {
   }
 
   const addProduct = async (productData) => {
-    setAddLoading(true);
     try {
       const formData = new FormData();
 
@@ -71,12 +70,10 @@ export const useProducts = () => {
       setProducts(data.data);
 
     } finally {
-      setAddLoading(false);
     }
   };
 
   const updateProduct = async (p) => {
-    setUpdateLoading(true);
     try {
       if (p === null) {
         return;
@@ -112,7 +109,6 @@ export const useProducts = () => {
       return response;
 
     } finally {
-      setUpdateLoading(false);
     }
   };
 
