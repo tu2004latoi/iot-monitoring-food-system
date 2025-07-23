@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import Apis, { endpoints } from "../api/Apis"
+import Apis, { endpoints } from "../configs/Apis"
 import { usePost } from "./usePost";
 import { useFetch } from "./useFetch";
 
 export const useCategories =() =>{
   const {data : cateData, error: err } = useFetch(endpoints.categories);
   const [categories, setCategories] = useState([]);
-  const {isLoading, error: postErr, postData} = usePost(endpoints.categoryAdd);
+  const {error: postErr, postData} = usePost(endpoints.categoryAdd);
   useEffect(()=>{ 
     if (cateData){
       setCategories(cateData)
     }
   }, [cateData])
 
-  if(err){
+  if(err|| postErr){
     console.error(err)
     return {
       categories:[],

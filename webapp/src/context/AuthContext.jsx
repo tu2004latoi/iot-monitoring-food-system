@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import APIs, { authApis, endpoints } from "../api/Apis";
+import APIs, { authApis, endpoints } from "../configs/Apis";
 import Cookies from "js-cookie";
 const AuthContext = createContext();
 

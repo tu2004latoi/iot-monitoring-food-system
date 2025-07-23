@@ -1,5 +1,5 @@
 import {useReducer} from "./useReducer";
-import {authApis} from "../api/Apis";
+import {authApis} from "../configs/Apis";
 
 // Reducer xử lý các trạng thái POST
 function putReducer(state, action) {

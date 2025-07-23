@@ -14,6 +14,7 @@ import Categories from "./pages/Categories";
 import Devices from "./pages/Devices";
 import { useDevices } from "./hooks/useDevices";
 import { useCategories } from "./hooks/useCategories";
+import PushNotification from "./components/PushNotification";
 
 // Tạo PrivateRoute component
 const PrivateRoute = ({ children }) => {
@@ -55,6 +56,7 @@ function App() {
 
   return(
     <div className={`app ${theme}`}>
+      <PushNotification/>
       <Header toggleTheme={toggleTheme} currentTheme={theme} />
       {user && (
         <FaBars 

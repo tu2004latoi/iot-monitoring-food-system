@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import "./Settings.css";
-import { authApis, endpoints } from "../api/Apis";
+import { authApis, endpoints } from "../configs/Apis";
 const Settings = () => {
   const { user ,setUser} = useAuth();
   const [form, setForm] = useState({

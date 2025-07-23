@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { endpoints } from "../api/Apis";
+import { endpoints } from "../configs/Apis";
 import { useFetch } from "./useFetch";
 import { usePost } from "./usePost";
 import { usePut } from "./usePut";
