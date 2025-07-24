@@ -1,7 +1,6 @@
 package com.n7.controllers;
 
 import com.n7.pojo.Device;
-import com.n7.pojo.Product;
 import com.n7.pojo.User;
 import com.n7.services.DeviceService;
 import com.n7.services.UserService;
@@ -80,8 +79,17 @@ public class ApiDeviceController {
     @PostMapping("/devices/code/{deviceCode}")
     public ResponseEntity<Device> registryUserToDevice(@PathVariable String deviceCode, Principal principal){
         Device device = this.deviceService.getDeviceByDeviceCode(deviceCode);
-        User user = this.userService.getUserByUsername(principal.getName());
+        String username = principal.getName();
+        User user = this.userService.getUserByUsername(username);
 
         return ResponseEntity.ok(this.deviceService.registryUserToDevice(device, user));
+    }
+
+    @DeleteMapping("/devices/code/{deviceCode}")
+    public ResponseEntity<String> deleteDeviceByCode(@PathVariable String deviceCode){
+        Device device = this.deviceService.getDeviceByDeviceCode(deviceCode);
+        this.deviceService.deleteDevice(device);
+
+        return ResponseEntity.ok("ok");
     }
 }

@@ -26,7 +26,7 @@ export const usePut = (url) => {
 		dispatch({type: "putAPI/request"});
 
 		try {
-			const API =  authApis();
+			const API = await authApis();
 
 			const isFormData = body instanceof FormData;
 
@@ -36,7 +36,6 @@ export const usePut = (url) => {
 
 			const res = await API.patch(url, body, config);
 			dispatch({type: "putAPI/success", data: res.data});
-			return res.data;
 
 		} catch (err) {
 			dispatch({type: "putAPI/error", error: err});

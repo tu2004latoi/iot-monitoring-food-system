@@ -1,9 +1,6 @@
 import axios from "axios";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const BASE_URL = 'http://localhost:8080/api/';
-import Cookies from "js-cookie"; 
-
-
 
 export const endpoints = {
 	login: '/auth/login',
@@ -13,6 +10,7 @@ export const endpoints = {
 	userAdd: '/users/add',
 	userUpdate: (id) => `/users/${id}/update`,
 	userDelete: (id) => `/users/${id}`,
+
 
 	products: '/products',
 	productAdd: '/products/add',
@@ -27,24 +25,18 @@ export const endpoints = {
 
 	units: '/units',
 	unitDetail:(id)=> `/units/${id}`,
-  unitAdd: '/units/add',
+	unitAdd: '/units/add',
 	unitDelete:(id)=> `/units/${id}`,
-
-  devices: '/devices',
-  devicesDetail: (id) => `/devices/${id}`,
-  myDevices: '/my-devices',
-  devicesCode: (deviceCode) => `/devices/code/${deviceCode}`,
-
 }
 
-export const authApis = () => {
-	const token = Cookies.get("token");
+export const authApis = async () => {
+	const token = await AsyncStorage.getItem('token');
 	if (!token) {
-		return;
+		console.error("Token không tồn tại");
+		throw new Error("Token không tồn tại");
 	}
 	return axios.create({
 		baseURL: BASE_URL,
-		withCredentials: true,
 		headers: {
 			'Authorization': `Bearer ${token}`
 		}

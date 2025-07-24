@@ -26,7 +26,7 @@ export const usePost = (url) => {
 		dispatch({type: "postAPI/request"});
 
 		try {
-			const API = authApis();
+			const API = await authApis();
 
 			const isFormData = body instanceof FormData;
 

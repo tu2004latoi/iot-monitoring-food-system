@@ -1,149 +1,69 @@
-import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Products from "./pages/Products";
-import { useProducts } from "./hooks/useProducts";
-import Settings from "./pages/Settings";
-import { FaBars } from "react-icons/fa";
-import "./App.css";
-import { useAuth } from "./context/AuthContext"; // Thêm import
-import Categories from "./pages/Categories";
-import Devices from "./pages/Devices";
-import { useDevices } from "./hooks/useDevices";
-import { useCategories } from "./hooks/useCategories";
-import PushNotification from "./components/PushNotification";
+import { createContext, useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import APIs, { authApis, endpoints } from "../configs/Apis";
+import Cookies from "js-cookie";
+const AuthContext = createContext();
 
-// Tạo PrivateRoute component
-const PrivateRoute = ({ children }) => {
-  const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [token, setToken] = useState(Cookies.get("token") || null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+  // Kiểm tra token khi load app
+  useEffect(() => {
+    if (!token || !user) return;
+    const fetchProfile = async () => {
+      try {
+        const api = authApis();
+        const res = await api.get(endpoints.profile);
+        setUser(res.data);
+      } catch (err) {
+        console.error("ERR", err.response?.data || err.message);
+        logout();
+
+      }
+    };
+
+    fetchProfile();
+  }, [token]);
+
+  const login = async (credentials) => {
+    const response = await APIs.post(endpoints.login, credentials, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setToken(response.data.token);
+    Cookies.set('token', response.data.token, { expires: 1 });
+    const api = authApis(); // gắn token
+    const profileRes = await api.get(endpoints.profile);
+    localStorage.setItem("user", JSON.stringify(profileRes.data));
+    setUser(profileRes.data); // cập nhật user
+    navigate("/");
+  };
+
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem("user");
+    Cookies.remove("token");
+    // navigate("/login");
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, token, login, logout, setUser  }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-function App() {
-  const [theme, setTheme] = useState("light");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { user } = useAuth();
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-
-
-  const {
-    units,
-    products,
-    addProduct,
-    updateProduct,
-    deleteProduct,
-  } = useProducts();
-  
-  const {
-    categories,
-    addCates,
-    deleteCates,
-  } = useCategories();
-
-  const {
-    devices,
-    addDevice,
-    updateDevice,
-    deleteDevice,
-  } = useDevices();
-
-  return(
-    <div className={`app ${theme}`}>
-      <PushNotification/>
-      <Header toggleTheme={toggleTheme} currentTheme={theme} />
-      {user && (
-        <FaBars 
-          className={`text-4xl toggle-button ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
-            }`}
-          onClick={toggleSidebar}
-        />
-      )}
-      <div className="container flex h-screen w-screen">
-        {user && (
-          <div className={`h-screen left ${isSidebarOpen ? "open" : "closed"}`}>
-            <Sidebar />
-          </div>
-        )}
-
-        <div
-          className={`h-screen right ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"
-            }`}
-        >
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/"
-              element={
-                <PrivateRoute>
-                  <Home
-                    products={products}
-                    categories={categories}
-                    units={units}
-                  />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/products"
-              element={
-                <PrivateRoute>
-                  <Products
-                    products={products}
-                    addProduct={addProduct}
-                    updateProduct={updateProduct}
-                    deleteProduct={deleteProduct}
-                    categories={categories}
-                    units={units}
-                  />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/categories"
-              element={
-                <PrivateRoute>
-                  <Categories 
-                    categories={categories} 
-                    addCates={addCates}
-                    deleteCates={deleteCates}
-                  />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/devices"
-              element={
-                <PrivateRoute>
-                  <Devices
-                    devices={devices}
-                    addDevice={addDevice}
-                    updateDevice={updateDevice}
-                    deleteDevice={deleteDevice}
-                  />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <PrivateRoute>
-                  <Settings />
-                </PrivateRoute>
-              }
-            />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default App;
+export const useAuth = () => useContext(AuthContext);
