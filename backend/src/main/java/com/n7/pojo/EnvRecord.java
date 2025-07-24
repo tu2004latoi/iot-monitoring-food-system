@@ -30,7 +30,6 @@ public class EnvRecord {
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
-
     public Integer getRecordId() {
         return recordId;
     }
@@ -61,5 +60,13 @@ public class EnvRecord {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
 }

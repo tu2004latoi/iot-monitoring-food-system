@@ -68,7 +68,7 @@ const Login = ({ onLoginSuccess }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Hệ thống quản lý bảo trì thiết bị</Text>
+      <Text style={styles.title}>Hệ thống bảo quản thực phẩm</Text>
       {msg ? <Text style={styles.errorMsg}>{msg}</Text> : null}
 
       <TextInput

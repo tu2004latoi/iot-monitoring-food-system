@@ -78,8 +78,10 @@ public class ApiDeviceController {
     }
 
     @PostMapping("/devices/code/{deviceCode}")
-    public ResponseEntity<Device> registryUserToDevice(@PathVariable String deviceCode, @ModelAttribute User user){
+    public ResponseEntity<Device> registryUserToDevice(@PathVariable String deviceCode, Principal principal){
         Device device = this.deviceService.getDeviceByDeviceCode(deviceCode);
+        String username = principal.getName();
+        User user = this.userService.getUserByUsername(username);
 
         return ResponseEntity.ok(this.deviceService.registryUserToDevice(device, user));
     }

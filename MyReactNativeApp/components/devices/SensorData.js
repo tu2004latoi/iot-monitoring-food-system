@@ -3,18 +3,19 @@ import { View, Text, StyleSheet } from 'react-native';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
-const SensorData = () => {
+const SensorData = ({ deviceCode }) => {
   const [sensorData, setSensorData] = useState(null);
 
   useEffect(() => {
+    if (!deviceCode) return;
+
     const socket = new SockJS('http://10.0.2.2:8080/ws');
     const client = new Client({
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       onConnect: () => {
-        console.log('✅ WebSocket connected');
-        client.subscribe('/topic/esp32', (message) => {
-          console.log('🔥 Received:', message.body);
+        console.log(`✅ WebSocket connected to ${deviceCode}`);
+        client.subscribe(`/topic/esp32/${deviceCode}`, (message) => {
           try {
             const data = JSON.parse(message.body);
             setSensorData(data);
@@ -33,11 +34,11 @@ const SensorData = () => {
     return () => {
       client.deactivate();
     };
-  }, []);
+  }, [deviceCode]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Dữ liệu cảm biến (ESP32)</Text>
+    <View style={styles.sensorContainer}>
+      <Text style={styles.title}>🌡️ Dữ liệu cảm biến</Text>
       {sensorData ? (
         <>
           <Text>Nhiệt độ: {sensorData.temperature}°C</Text>
@@ -52,22 +53,16 @@ const SensorData = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',       // 👈 Gắn lên góc phải
-    top: 40,
-    right: 20,
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 8,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
+  sensorContainer: {
+    marginTop: 10,
+    padding: 8,
+    backgroundColor: '#e6f0ff',
+    borderRadius: 6,
   },
   title: {
-    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 6,
+    marginBottom: 4,
+    color: '#333',
   },
 });
 

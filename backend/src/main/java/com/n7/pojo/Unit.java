@@ -11,6 +11,7 @@ import java.util.List;
 @Table(name = "units")
 public class Unit {
 
+    // Getter và Setter nếu không dùng Lombok
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "unit_id")
@@ -27,7 +28,6 @@ public class Unit {
     @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
-    // Getter và Setter nếu không dùng Lombok
     public Integer getUnitId() {
         return unitId;
     }
@@ -44,19 +44,19 @@ public class Unit {
         this.unitName = unitName;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public List<Product> getProducts() {
         return products;
     }
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
