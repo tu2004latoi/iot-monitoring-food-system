@@ -39,7 +39,7 @@ CREATE TABLE products (
     unit_id int,
     quantity FLOAT,
     notes TEXT,
-    status enum ('notExpired', 'Expired'),
+    status enum ('notExpired', 'expired'),
     image TEXT,
     is_active boolean,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
