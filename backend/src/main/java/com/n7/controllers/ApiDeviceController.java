@@ -1,7 +1,6 @@
 package com.n7.controllers;
 
 import com.n7.pojo.Device;
-import com.n7.pojo.Product;
 import com.n7.pojo.User;
 import com.n7.services.DeviceService;
 import com.n7.services.UserService;

@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
 import {useReducer} from './useReducer';
-import  {authApis} from '../api/Apis';
+import  {authApis} from '../configs/Apis';
+import { useAuth } from '../context/AuthContext';
 
 function fetchReducer(state, action) {
     switch (action.type) {
@@ -20,6 +21,7 @@ function fetchReducer(state, action) {
 }
 
 export const useFetch = (url) => {
+    const {token} = useAuth();
     const [state, dispatch] = useReducer(fetchReducer, {
         data: [],
         isLoading: false,
@@ -27,13 +29,14 @@ export const useFetch = (url) => {
     });
 
     useEffect(() => {
+        if (!token) return;
         (async () => {
             dispatch({
                 type: 'fetchAPI/request',
                 isLoading: true,
             });
             try {
-                const API = await authApis();
+                const API =  authApis();
                 const res = await API.get(url);
                 const json = res.data;
 
@@ -52,7 +55,7 @@ export const useFetch = (url) => {
                 });
             }
         })();
-    }, [url]);
+    }, [url, token]);
 
     // return { data: state.data, isLoading: state.isLoading, error: state.error};
     return {...state};

@@ -1,111 +1,69 @@
-import React, { useState } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Products from "./pages/Products";
-import { useProducts } from "./hooks/useProducts";
-import Settings from "./pages/Settings";
-import Testapp from "./Testapp";
-import { FaBars } from "react-icons/fa";
-import { useAuth } from "./context/AuthContext";
-import "./App.css";
+import { createContext, useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import APIs, { authApis, endpoints } from "../configs/Apis";
+import Cookies from "js-cookie";
+const AuthContext = createContext();
 
-// ✅ PrivateRoute kiểm tra đăng nhập
-const PrivateRoute = ({ children }) => {
-  const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
-};
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [token, setToken] = useState(Cookies.get("token") || null);
+  const navigate = useNavigate();
 
-function App() {
-  const [theme, setTheme] = useState("light");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { token } = useAuth();
-  const location = useLocation();
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+  // Kiểm tra token khi load app
+  useEffect(() => {
+    if (!token || !user) return;
+    const fetchProfile = async () => {
+      try {
+        const api = authApis();
+        const res = await api.get(endpoints.profile);
+        setUser(res.data);
+      } catch (err) {
+        console.error("ERR", err.response?.data || err.message);
+        logout();
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+      }
+    };
+
+    fetchProfile();
+  }, [token]);
+
+  const login = async (credentials) => {
+    const response = await APIs.post(endpoints.login, credentials, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setToken(response.data.token);
+    Cookies.set('token', response.data.token, { expires: 1 });
+    const api = authApis(); // gắn token
+    const profileRes = await api.get(endpoints.profile);
+    localStorage.setItem("user", JSON.stringify(profileRes.data));
+    setUser(profileRes.data); // cập nhật user
+    navigate("/");
   };
 
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
-
-  const layoutVisiblePaths = ["/home", "/products", "/settings", "/test"];
-  const showLayout = token && layoutVisiblePaths.includes(location.pathname);
-
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    localStorage.removeItem("user");
+    Cookies.remove("token");
+    // navigate("/login");
+  };
 
   return (
-    <div className={`app ${theme}`}>
-      {/* Không còn Header */}
-      {showLayout && (
-        <FaBars
-          className={`toggle-button ${
-            isSidebarOpen ? "sidebar-open" : "sidebar-closed"
-          }`}
-          onClick={toggleSidebar}
-          title="Thu nhỏ"
-        />
-      )}
-
-      <div className="container">
-        {showLayout && (
-          <div className={`left ${isSidebarOpen ? "open" : "closed"}`}>
-            <Sidebar toggleTheme={toggleTheme} currentTheme={theme} />
-          </div>
-        )}
-
-        <div
-          className={`right ${
-            isSidebarOpen ? "sidebar-open" : "sidebar-closed"
-          }`}
-        >
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/home"
-              element={
-                <PrivateRoute>
-                  <Home products={products} />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/products"
-              element={
-                <PrivateRoute>
-                  <Products
-                    products={products}
-                    addProduct={addProduct}
-                    updateProduct={updateProduct}
-                    deleteProduct={deleteProduct}
-                  />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <PrivateRoute>
-                  <Settings />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/test"
-              element={
-                <PrivateRoute>
-                  <Testapp />
-                </PrivateRoute>
-              }
-            />
-            <Route path="*" element={<Navigate to="/login" />} />
-          </Routes>
-        </div>
-      </div>
-    </div>
+    <AuthContext.Provider value={{ user, token, login, logout, setUser  }}>
+      {children}
+    </AuthContext.Provider>
   );
-}
+};
 
-export default App;
+export const useAuth = () => useContext(AuthContext);
