@@ -1,13 +1,7 @@
 package com.n7.controllers;
 
-import com.n7.pojo.Category;
-import com.n7.pojo.Product;
-import com.n7.pojo.Unit;
-import com.n7.pojo.User;
-import com.n7.services.CategoryService;
-import com.n7.services.ProductService;
-import com.n7.services.UnitService;
-import com.n7.services.UserService;
+import com.n7.pojo.*;
+import com.n7.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +29,9 @@ public class ApiProductController {
     @Autowired
     private UnitService unitSer;
 
+    @Autowired
+    private WarehouseService warehouseService;
+
     @GetMapping("/products")
     public ResponseEntity<?> getAllProducts(){
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -51,6 +48,7 @@ public class ApiProductController {
             data.put("detectedAt", dateTimeFormatter.format(p.getDetectedAt()));
             data.put("unitId", p.getUnit().getUnitId());
             data.put("quantity", p.getQuantity());
+            data.put("warehouseId", p.getWarehouse().getWarehouseId());
             data.put("notes", p.getNotes());
             data.put("status", p.getStatus());
             data.put("image", p.getImage());
@@ -71,6 +69,7 @@ public class ApiProductController {
             @RequestParam("detectedAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime detectedAt,
             @RequestParam("unitId") Integer unitId,
             @RequestParam("quantity") Float quantity,
+            @RequestParam("warehouseId") Integer warehouseId,
             @RequestParam("notes") String notes,
             @RequestParam("status") Product.Status status,
             @RequestParam("file") MultipartFile file) {
@@ -78,6 +77,7 @@ public class ApiProductController {
         User u = this.userSer.getUserByUserId(userId);
         Category cate = this.categorySer.getCategoryById(categoryId);
         Unit unit = this.unitSer.getUnitById(unitId);
+        Warehouse warehouse = this.warehouseService.getWarehouseById(warehouseId);
 
         Product p = new Product();
         p.setUser(u);
@@ -87,6 +87,7 @@ public class ApiProductController {
         p.setExpiryDate(expiryDate);
         p.setDetectedAt(detectedAt);
         p.setQuantity(quantity);
+        p.setWarehouse(warehouse);
         p.setNotes(notes);
         p.setStatus(status);
         p.setFile(file);
@@ -105,6 +106,7 @@ public class ApiProductController {
             @RequestParam(value = "detectedAt", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime detectedAt,
             @RequestParam(value = "unitId", required = false) Integer unitId,
             @RequestParam(value = "quantity", required = false) Float quantity,
+            @RequestParam(value = "warehouseId", required = false) Integer warehouseId,
             @RequestParam(value = "notes", required = false) String notes,
             @RequestParam(value = "status", required = false) Product.Status status,
             @RequestParam(value = "file", required = false) MultipartFile file) {
@@ -128,6 +130,11 @@ public class ApiProductController {
 
         if (quantity != null && !quantity.equals(existingProduct.getQuantity())) {
             existingProduct.setQuantity(quantity);
+        }
+
+        if (warehouseId != null && !warehouseId.equals(existingProduct.getWarehouse().getWarehouseId())) {
+            Warehouse warehouse = warehouseService.getWarehouseById(warehouseId);
+            existingProduct.setWarehouse(warehouse);
         }
 
         if (notes != null && !notes.equals(existingProduct.getNotes())) {
