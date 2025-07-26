@@ -1,5 +1,5 @@
 import {useReducer} from "./useReducer";
-import {authApis} from "../api/Apis";
+import {authApis} from "../configs/Apis";
 
 // Reducer xử lý các trạng thái POST
 function postReducer(state, action) {
@@ -26,7 +26,7 @@ export const usePost = (url) => {
 		dispatch({type: "postAPI/request"});
 
 		try {
-			const API = authApis();
+			const API = await authApis();
 
 			const isFormData = body instanceof FormData;
 

@@ -45,6 +45,10 @@ public class Product {
     @Column(name = "quantity")
     private Float quantity;
 
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+
     @Lob
     @Column(name = "notes")
     private String notes;

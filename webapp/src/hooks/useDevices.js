@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { endpoints } from "../api/Apis";
+import { endpoints } from "../configs/Apis";
 import { useFetch } from "./useFetch";
 import { usePost } from "./usePost";
 import { usePut } from "./usePut";
@@ -22,7 +22,7 @@ export const useDevices = () => {
 
 
   if (fetchError || postError || putError) {
-    console.error(fetchError || postError);
+    // console.error(fetchError || postError);
     return {
       devices: [],
       adddevice: () => {},
@@ -40,7 +40,7 @@ export const useDevices = () => {
     Data.deviceCode =deviceData.deviceCode;
     
 
-    const response = await postData(formData);
+    const response = await postData(Data);
     setdevices((prev) => [...prev, response]);
   };
 

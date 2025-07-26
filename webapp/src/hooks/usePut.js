@@ -1,8 +1,8 @@
 import {useReducer} from "./useReducer";
-import {authApis} from "../api/Apis";
+import {authApis} from "../configs/Apis";
 
 // Reducer xử lý các trạng thái POST
-function postReducer(state, action) {
+function putReducer(state, action) {
 	switch (action.type) {
 		case "putAPI/request":
 			return {...state, isLoading: true, error: null};
@@ -15,18 +15,18 @@ function postReducer(state, action) {
 	}
 }
 
-export const usePut = () => {
-	const [state, dispatch] = useReducer(postReducer, {
+export const usePut = (url) => {
+	const [state, dispatch] = useReducer(putReducer, {
 		data: null,
 		isLoading: false,
 		error: null,
 	});
 
-	const putData = async (url,body) => {
+	const putData = async (body) => {
 		dispatch({type: "putAPI/request"});
 
 		try {
-			const API =  authApis();
+			const API = await authApis();
 
 			const isFormData = body instanceof FormData;
 
@@ -36,7 +36,6 @@ export const usePut = () => {
 
 			const res = await API.patch(url, body, config);
 			dispatch({type: "putAPI/success", data: res.data});
-			return res.data;
 
 		} catch (err) {
 			dispatch({type: "putAPI/error", error: err});

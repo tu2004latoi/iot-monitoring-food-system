@@ -16,6 +16,7 @@ public class WebSocketController {
         String topic = "/topic/esp32/" + dto.getDeviceCode();
         messagingTemplate.convertAndSend(topic, dto);
     }
+
 }
 
 

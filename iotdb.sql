@@ -22,6 +22,12 @@ CREATE TABLE categories (
     description text
 );
 
+create table warehouses(
+	warehouse_id int auto_increment primary key,
+    name varchar(50),
+    description text
+);
+
 CREATE TABLE units (
 	unit_id int auto_increment primary key,
     unit_name varchar(50),
@@ -38,10 +44,12 @@ CREATE TABLE products (
     detected_at DATETIME NOT NULL,
     unit_id int,
     quantity FLOAT,
+    warehouse_id int,
     notes TEXT,
-    status enum ('notExpired', 'Expired'),
+    status enum ('notExpired', 'expired'),
     image TEXT,
     is_active boolean,
+    foreign key (warehouse_id) references warehouses(warehouse_id) on delete set null,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
     FOREIGN KEY (category_id) references categories(category_id) on delete set null,
     foreign key (unit_id) references units(unit_id) on delete set null
@@ -52,6 +60,8 @@ CREATE TABLE devices (
     user_id int,
     device_name varchar(50),
     device_code varchar(50) unique,
+    warehouse_id int,
+    foreign key (warehouse_id) references warehouses(warehouse_id) on delete set null,
     foreign key (user_id) references users(user_id) on delete set null
 );
 
